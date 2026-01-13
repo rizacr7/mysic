@@ -1,0 +1,24 @@
+{
+  "name": "MySIC-HRIS",
+  "short_name": "MySIC",
+  "start_url": "https://wms.sic.co.id/mysic/index.php/Welcome",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "categories": ["mobile", "multipurpose", "blog", "ecommerce", "pwa"],
+  "orientation": "portrait",
+  "description": "HRIS Mobile Semen Indonesia Cooperative",
+  "icons": [{
+      "src": "img/icons/logo_mysic.png",
+      "type": "image/png",
+      "sizes": "72x72",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "img/icons/logo_mysic.png",
+      "type": "image/png",
+      "sizes": "96x96",
+      "purpose": "any maskable"
+    }
+  ]
+}
