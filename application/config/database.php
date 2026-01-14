@@ -73,7 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
-if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
+if($_SERVER['SERVER_ADDR'] == '103.163.138.117'){ // Production   cpanel
 
 	$db['default'] = array(
 	 'dsn' => '',
@@ -88,8 +88,8 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 	 'db_debug' => TRUE,
 	 'cache_on' => FALSE,
 	 'cachedir' => '',
-	 'char_set' => 'utf8',
-	 'dbcollat' => 'utf8_general_ci',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
 	 'swap_pre' => '',
 	 'encrypt' => FALSE,
 	 'compress' => FALSE,
@@ -111,8 +111,8 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 	 'db_debug' => TRUE,
 	 'cache_on' => FALSE,
 	 'cachedir' => '',
-	 'char_set' => 'utf8',
-	 'dbcollat' => 'utf8_general_ci',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
 	 'swap_pre' => '',
 	 'encrypt' => FALSE,
 	 'compress' => FALSE,
@@ -134,8 +134,8 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 	 'db_debug' => TRUE,
 	 'cache_on' => FALSE,
 	 'cachedir' => '',
-	 'char_set' => 'utf8',
-	 'dbcollat' => 'utf8_general_ci',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
 	 'swap_pre' => '',
 	 'encrypt' => FALSE,
 	 'compress' => FALSE,
@@ -157,8 +157,8 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 	 'db_debug' => TRUE,
 	 'cache_on' => FALSE,
 	 'cachedir' => '',
-	 'char_set' => 'utf8',
-	 'dbcollat' => 'utf8_general_ci',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
 	 'swap_pre' => '',
 	 'encrypt' => FALSE,
 	 'compress' => FALSE,
@@ -179,8 +179,8 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 		'db_debug' => (ENVIRONMENT !== 'production'),
 		'cache_on' => FALSE,
 		'cachedir' => '',
-		'char_set' => 'utf8',
-		'dbcollat' => 'utf8_general_ci',
+	    'char_set' => 'latin1',
+	    'dbcollat' => 'latin1_swedish_ci',
 		'swap_pre' => '',
 		'encrypt' => FALSE,
 		'compress' => FALSE,
@@ -202,8 +202,8 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 		'db_debug' => TRUE,
 		'cache_on' => FALSE,
 		'cachedir' => '',
-		'char_set' => 'utf8',
-		'dbcollat' => 'utf8_general_ci',
+		'char_set' => 'latin1',
+	    'dbcollat' => 'latin1_swedish_ci',
 		'swap_pre' => '',
 		'encrypt' => FALSE,
 		'compress' => FALSE,
@@ -212,21 +212,23 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 		'save_queries' => TRUE
 	   );
 
-}else{ //jika DEV
+}
+else if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ //jika wms
 	$db['default'] = array(
 	 'dsn' => '',
-	 'hostname' => '172.20.110.20',
-	 'username' => 'root',
-	 'password' => 'hasanjos',
-	 'database' => 'db_cuti',
+	 'hostname' => '127.0.0.1',
+	 'port'=>'33061',
+	 'username' => 'shica',
+	 'password' => 'shica12345',
+	 'database' => 'db_hrd',
 	 'dbdriver' => 'mysqli',
 	 'dbprefix' => '',
 	 'pconnect' => FALSE,
 	 'db_debug' => TRUE,
 	 'cache_on' => FALSE,
 	 'cachedir' => '',
-	 'char_set' => 'utf8',
-	 'dbcollat' => 'utf8_general_ci',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
 	 'swap_pre' => '',
 	 'encrypt' => FALSE,
 	 'compress' => FALSE,
@@ -237,9 +239,10 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 
 	$db['db_fina'] = array(
 	 'dsn' => '',
-	 'hostname' => '172.20.110.20',
-	 'username' => 'root',
-	 'password' => 'hasanjos',
+	 'hostname' => '127.0.0.1',
+	 'port'=>'33061',
+	 'username' => 'shica',
+	 'password' => 'shica12345',
 	 'database' => 'db_fina',
 	 'dbdriver' => 'mysqli',
 	 'dbprefix' => '',
@@ -247,8 +250,54 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 	 'db_debug' => TRUE,
 	 'cache_on' => FALSE,
 	 'cachedir' => '',
-	 'char_set' => 'utf8',
-	 'dbcollat' => 'utf8_general_ci',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
+	 'swap_pre' => '',
+	 'encrypt' => FALSE,
+	 'compress' => FALSE,
+	 'stricton' => FALSE,
+	 'failover' => array(),
+	 'save_queries' => TRUE
+	);
+	
+	$db['hrdonline'] = array(
+	 'dsn' => '',
+	 'hostname' => '127.0.0.1',
+	 'port'=>'33061',
+	 'username' => 'shica',
+	 'password' => 'shica12345',
+	 'database' => 'db_hrd',
+	 'dbdriver' => 'mysqli',
+	 'dbprefix' => '',
+	 'pconnect' => FALSE,
+	 'db_debug' => TRUE,
+	 'cache_on' => FALSE,
+	 'cachedir' => '',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
+	 'swap_pre' => '',
+	 'encrypt' => FALSE,
+	 'compress' => FALSE,
+	 'stricton' => FALSE,
+	 'failover' => array(),
+	 'save_queries' => TRUE
+	);
+	
+	$db['db_cuti'] = array(
+	 'dsn' => '',
+	 'hostname' => '127.0.0.1',
+	 'port'=>'33061',
+	 'username' => 'shica',
+	 'password' => 'shica12345',
+	 'database' => 'db_cuti',
+	 'dbdriver' => 'mysqli',
+	 'dbprefix' => '',
+	 'pconnect' => FALSE,
+	 'db_debug' => TRUE,
+	 'cache_on' => FALSE,
+	 'cachedir' => '',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
 	 'swap_pre' => '',
 	 'encrypt' => FALSE,
 	 'compress' => FALSE,
@@ -257,20 +306,134 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 	 'save_queries' => TRUE
 	);
 
-	$db['db_pbb_kwsg'] = array(
+	$db['hrdbtp'] = array(
+		'dsn'	=> '',
+		'hostname' => '172.20.110.2',
+		'username' => 'hasan',
+		'password' => 'Koperasi_135',
+		'database' => 'db_hrd',
+		'dbdriver' => 'mysqli',
+		'dbprefix' => '',
+		'pconnect' => FALSE,
+		'db_debug' => (ENVIRONMENT !== 'production'),
+		'cache_on' => FALSE,
+		'cachedir' => '',
+	    'char_set' => 'latin1',
+	    'dbcollat' => 'latin1_swedish_ci',
+		'swap_pre' => '',
+		'encrypt' => FALSE,
+		'compress' => FALSE,
+		'stricton' => FALSE,
+		'failover' => array(),
+		'save_queries' => TRUE
+	);
+
+	$db['pbb'] = array(
+		'dsn' => '',
+		'hostname' => '127.0.0.1',
+		'port'=>'33061',
+		'username' => 'shica',
+		'password' => 'shica12345',
+		'database' => 'db_pbb_kwsg',
+		'dbdriver' => 'mysqli',
+		'dbprefix' => '',
+		'pconnect' => FALSE,
+		'db_debug' => TRUE,
+		'cache_on' => FALSE,
+		'cachedir' => '',
+		'char_set' => 'latin1',
+	    'dbcollat' => 'latin1_swedish_ci',
+		'swap_pre' => '',
+		'encrypt' => FALSE,
+		'compress' => FALSE,
+		'stricton' => FALSE,
+		'failover' => array(),
+		'save_queries' => TRUE
+	   );
+}
+else{ //jika local host
+	$db['default'] = array(
+		'dsn'	=> '',
+		'hostname' => '172.20.110.20',
+		'username' => 'wifi',
+		'password' => 'wifi123',
+		'database' => 'db_hrd',
+		'dbdriver' => 'mysqli',
+		'dbprefix' => '',
+		'pconnect' => FALSE,
+		'db_debug' => (ENVIRONMENT !== 'production'),
+		'cache_on' => FALSE,
+		'cachedir' => '',
+		'char_set' => 'utf8',
+		'dbcollat' => 'utf8_general_ci',
+		'swap_pre' => '',
+		'encrypt' => FALSE,
+		'compress' => FALSE,
+		'stricton' => FALSE,
+		'failover' => array(),
+		'save_queries' => TRUE
+	);
+
+	$db['db_fina'] = array(
 	 'dsn' => '',
 	 'hostname' => '172.20.110.20',
-	 'username' => 'root',
-	 'password' => 'hasanjos',
-	 'database' => 'db_pbb_kwsg',
+	 'username' => 'wifi',
+	 'password' => 'wifi123',
+	 'database' => 'db_fina',
 	 'dbdriver' => 'mysqli',
 	 'dbprefix' => '',
 	 'pconnect' => FALSE,
 	 'db_debug' => TRUE,
 	 'cache_on' => FALSE,
 	 'cachedir' => '',
-	 'char_set' => 'utf8',
-	 'dbcollat' => 'utf8_general_ci',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
+	 'swap_pre' => '',
+	 'encrypt' => FALSE,
+	 'compress' => FALSE,
+	 'stricton' => FALSE,
+	 'failover' => array(),
+	 'save_queries' => TRUE
+	);
+	
+	$db['hrdonline'] = array(
+	 'dsn' => '',
+	 'hostname' => '172.20.110.20',
+	 'port'=>'3306',
+	 'username' => 'wifi',
+	 'password' => 'wifi123',
+	 'database' => 'db_hrd',
+	 'dbdriver' => 'mysqli',
+	 'dbprefix' => '',
+	 'pconnect' => FALSE,
+	 'db_debug' => TRUE,
+	 'cache_on' => FALSE,
+	 'cachedir' => '',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
+	 'swap_pre' => '',
+	 'encrypt' => FALSE,
+	 'compress' => FALSE,
+	 'stricton' => FALSE,
+	 'failover' => array(),
+	 'save_queries' => TRUE
+	);
+	
+	$db['db_cuti'] = array(
+	 'dsn' => '',
+	 'hostname' => '172.20.110.20',
+	 'port'=>'3306',
+	 'username' => 'wifi',
+	 'password' => 'wifi123',
+	 'database' => 'db_cuti',
+	 'dbdriver' => 'mysqli',
+	 'dbprefix' => '',
+	 'pconnect' => FALSE,
+	 'db_debug' => TRUE,
+	 'cache_on' => FALSE,
+	 'cachedir' => '',
+	 'char_set' => 'latin1',
+	 'dbcollat' => 'latin1_swedish_ci',
 	 'swap_pre' => '',
 	 'encrypt' => FALSE,
 	 'compress' => FALSE,
@@ -279,51 +442,53 @@ if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ // Production
 	 'save_queries' => TRUE
 	);
 
-	$db['db_datacenter'] = array(
-	 'dsn' => '',
-	 'hostname' => '172.20.110.20',
-	 'username' => 'root',
-	 'password' => 'hasanjos',
-	 'database' => 'db_datacenter',
-	 'dbdriver' => 'mysqli',
-	 'dbprefix' => '',
-	 'pconnect' => FALSE,
-	 'db_debug' => TRUE,
-	 'cache_on' => FALSE,
-	 'cachedir' => '',
-	 'char_set' => 'utf8',
-	 'dbcollat' => 'utf8_general_ci',
-	 'swap_pre' => '',
-	 'encrypt' => FALSE,
-	 'compress' => FALSE,
-	 'stricton' => FALSE,
-	 'failover' => array(),
-	 'save_queries' => TRUE
+	$db['hrdbtp'] = array(
+		'dsn'	=> '',
+		'hostname' => '172.20.110.2',
+		'username' => 'hasan',
+		'password' => 'Koperasi_135',
+		'database' => 'db_hrd',
+		'dbdriver' => 'mysqli',
+		'dbprefix' => '',
+		'pconnect' => FALSE,
+		'db_debug' => (ENVIRONMENT !== 'production'),
+		'cache_on' => FALSE,
+		'cachedir' => '',
+	    'char_set' => 'latin1',
+	    'dbcollat' => 'latin1_swedish_ci',
+		'swap_pre' => '',
+		'encrypt' => FALSE,
+		'compress' => FALSE,
+		'stricton' => FALSE,
+		'failover' => array(),
+		'save_queries' => TRUE
 	);
 
-	$db['db_paransi_new'] = array(
-	 'dsn' => '',
-	 'hostname' => '172.20.110.20',
-	 'username' => 'root',
-	 'password' => 'hasanjos',
-	 'database' => 'db_paransi',
-	 'dbdriver' => 'mysqli',
-	 'dbprefix' => '',
-	 'pconnect' => FALSE,
-	 'db_debug' => TRUE,
-	 'cache_on' => FALSE,
-	 'cachedir' => '',
-	 'char_set' => 'utf8',
-	 'dbcollat' => 'utf8_general_ci',
-	 'swap_pre' => '',
-	 'encrypt' => FALSE,
-	 'compress' => FALSE,
-	 'stricton' => FALSE,
-	 'failover' => array(),
-	 'save_queries' => TRUE
-	);
+	$db['pbb'] = array(
+		'dsn' => '',
+		'hostname' => '172.20.110.20',
+		'port'=>'3306',
+		'username' => 'wifi',
+		'password' => 'wifi123',
+		'database' => 'db_pbb_kwsg',
+		'dbdriver' => 'mysqli',
+		'dbprefix' => '',
+		'pconnect' => FALSE,
+		'db_debug' => TRUE,
+		'cache_on' => FALSE,
+		'cachedir' => '',
+		'char_set' => 'latin1',
+	    'dbcollat' => 'latin1_swedish_ci',
+		'swap_pre' => '',
+		'encrypt' => FALSE,
+		'compress' => FALSE,
+		'stricton' => FALSE,
+		'failover' => array(),
+		'save_queries' => TRUE
+	   );
 
 }
+
 
 /*
 if($_SERVER['SERVER_ADDR'] == '172.20.110.20'){ // Production

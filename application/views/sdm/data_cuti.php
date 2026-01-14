@@ -10,67 +10,75 @@
   <div class="container">
     <div class="card">
       <div class="card-body">
-          <div class="spinner-border text-primary" role="status" style="display:none" align="center" id="loading">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="row">
-            <div class="col-12 col-md-12">
-              <div class="table-responsive">
-              <table class="display nowrap" style="width:100%" id="dataTable">
-              <thead>
-                <tr>
-                  <th>Bukti</th>
-                  <th>Nama</th>
-                  <th>Tgl.Cuti</th>
-                  <th>Lama</th>
-                  <th>Keterangan</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-              <?php 
-                $no_peg = $Datapeg[0]->no_peg;
-                $param = array();
-                $param['no_peg'] = $no_peg;
-                $dataresult = $this->sdm_model->cutipegawai($param);
 
-                foreach($dataresult as $key => $val){
+        <div class="spinner-border text-primary mb-3"
+            role="status" style="display:none" id="loading">
+          <span class="visually-hidden">Loading...</span>
+        </div>
 
-                  $tgl_input = $val['tgl_update'];
-                  $id_cuti = $val['id'];
+        <?php 
+          $no_peg = $Datapeg[0]->no_peg;
+          $param['no_peg'] = $no_peg;
+          $dataresult = $this->sdm_model->cutipegawai($param);
 
-                  $tgl_input_date = new DateTime($tgl_input);
-                  $tgl_sekarang   = new DateTime(date('Y-m-d'));
+          foreach($dataresult as $val){
 
-                  $selisih = $tgl_input_date->diff($tgl_sekarang)->days;
+            $tgl_input_date = new DateTime($val['tgl_update']);
+            $tgl_sekarang   = new DateTime(date('Y-m-d'));
 
-                  if ($tgl_sekarang <= $tgl_input_date->modify('+3 days')) {
-                      $btnaction = "<button class='btn m-1 btn-sm btn-danger'
-                        onclick=\"hapuscuti('{$val['id']}')\">
-                        <i class='bi bi-trash'></i>
-                      </button>";
-                  } else {
-                      $btnaction = ""; // kosongkan
-                  }
+            $btnaction = ($tgl_sekarang <= $tgl_input_date->modify('+3 days'))
+              ? "<button class='btn btn-sm btn-danger'
+                    onclick=\"hapuscuti('{$val['id']}')\">
+                    <i class='bi bi-trash'></i> Hapus
+                </button>"
+              : "";
+        ?>
 
-                  echo "
-                  <tr>
-                    <td>".$val['no_bukti']."</td>
-                    <td>".$val['na_peg']."</td>
-                    <td>".$val['tgl_awal']." s.d ".$val['tgl_akhir']."</td>
-                    <td>".$val['lama']."</td>
-                    <td>".$val['keterangan']."</td>
-                    <td>".$btnaction."</td>
-                  </tr>";
-                }
+        <!-- CARD ITEM -->
+        <div class="border rounded p-3 mb-3 bg-light">
 
-              ?>
-              </tbody>
-            </table>
-            </div>
+          <!-- HEADER -->
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <strong><?php echo $val['no_bukti']; ?></strong><br>
+              <small class="text-muted"><?php echo $val['na_peg']; ?></small>
             </div>
           </div>
+
+          <!-- BODY -->
+          <div class="row small mb-2">
+            <div class="col-12 mb-2">
+              <span class="text-muted">Tanggal Cuti</span><br>
+              <span class="fw-medium">
+                <?php echo $val['tgl_awal']." s.d ".$val['tgl_akhir']; ?>
+              </span>
+            </div>
+
+            <div class="col-6 mb-2">
+              <span class="text-muted">Lama</span><br>
+              <span class="fw-medium"><?php echo $val['lama']; ?> hari</span>
+            </div>
+
+            <div class="col-12 mb-2">
+              <span class="text-muted">Keterangan</span><br>
+              <span class="fw-medium"><?php echo $val['keterangan']; ?></span>
+            </div>
+          </div>
+
+          <!-- FOOTER -->
+          <?php if($btnaction != ""){ ?>
+          <div class="text-end">
+            <?php echo $btnaction; ?>
+          </div>
+          <?php } ?>
+
+        </div>
+        <!-- END CARD ITEM -->
+
+        <?php } ?>
+
       </div>
+
     </div>
   </div>
 </div>
