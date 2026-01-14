@@ -10,147 +10,153 @@
   <div class="container">
     <div class="card">
       <div class="card-body">
-          <div class="spinner-border text-primary" role="status" style="display:none" align="center" id="loading">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="row">
-            <div class="col-12 col-md-12">
-              <div class="table-responsive">
-              <table class="display nowrap" style="width:100%" id="dataTable">
-              <thead>
-                <tr>
-                  <th>View</th>
-                  <th style="display:none">Bukti</th>
-                  <th>No.Ref</th>
-                  <th>Nama</th>
-                  <th>Tgl.SPPD</th>
-                  <th>Tujuan</th>
-                  <th>Akomodasi</th>
-                  <th>Kendaraan</th>
-                  <th>Keterangan</th>
-                  <th>Beban</th>
-                  <th>K.Biaya</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-              <?php 
-                $no_peg = $Datapeg[0]->no_peg;
-                $param = array();
-                $param['no_peg'] = $no_peg;
-                $dataresult = $this->sdm_model->pjksppdpegawai($param);
 
-                foreach($dataresult as $key => $val){
+        <div class="spinner-border text-primary mb-3"
+            role="status" style="display:none" id="loading">
+          <span class="visually-hidden">Loading...</span>
+        </div>
 
-                  $tgl_input = $val['TGL_UPDATE'];
-                  $id_sppd = $val['ID'];
+        <?php 
+          $no_peg = $Datapeg[0]->no_peg;
+          $param['no_peg'] = $no_peg;
+          $dataresult = $this->sdm_model->pjksppdpegawai($param);
 
-                  $tgl_input_date = new DateTime($tgl_input);
-                  $tgl_sekarang   = new DateTime(date('Y-m-d'));
+          foreach($dataresult as $val){
 
-                  $selisih = $tgl_input_date->diff($tgl_sekarang)->days;
+            /* ===== Mapping ===== */
+             if($val['AKOMODASI'] == 1){
+              $akomodasi = "Hotel";
+            }
+            else if($val['AKOMODASI'] == 2){
+              $akomodasi = "Luar";
+            }
+            else if($val['AKOMODASI'] == 3){
+              $akomodasi = "Mess";
+            }
+            else{
+              $akomodasi = "-";
+            }
+            
+            if($val['KENDARAAN'] == 1){
+              $kendaraan = "Dinas";
+            }
+            else if($val['KENDARAAN'] == 2){
+              $kendaraan = "Kereta Api";
+            }
+            else if($val['KENDARAAN'] == 3){
+              $kendaraan = "Bus";
+            }
+            else if($val['KENDARAAN'] == 4){
+              $kendaraan = "Kapal";
+            }
+            else if($val['KENDARAAN'] == 5){
+              $kendaraan = "Pesawat";
+            }
+            else{
+              $kendaraan = "Lain-Lain";
+            }
 
-                  if ($val['APPROVE_ATASAN'] == '0') {
-                      $btnaction = "<button class='btn m-1 btn-sm btn-danger'
-                        onclick=\"hapuspjksppd('{$val['ID']}')\">
-                        <i class='bi bi-trash'></i>
-                      </button>";
-                  } else {
-                      $btnaction = ""; // kosongkan
-                  }
+            $label_app = ($val['APPROVE_ATASAN'] == '1')
+              ? "<span class='badge rounded-pill bg-primary'>Approved</span>"
+              : "<span class='badge rounded-pill bg-danger'>Pending</span>";
 
-                  if($val['APPROVE_ATASAN'] == '1'){
-                    $label_app = "<span class='m-1 badge rounded-pill bg-primary'>Approved</span>";
-                  }
-                  else{
-                    $label_app = "<span class='m-1 badge rounded-pill bg-danger'>Pending</span>";
-                  }
-                  
+            $btnaction = ($val['APPROVE_ATASAN'] == '0')
+              ? "<button class='btn btn-sm btn-danger'
+                    onclick=\"hapuspjksppd('{$val['ID']}')\">
+                    <i class='bi bi-trash'></i>
+                </button>"
+              : "";
 
-                  if($val['AKOMODASI'] == '1'){
-                    $akomodasi = "Hotel";
-                  }
-                  else if($val['AKOMODASI'] == '2'){
-                    $akomodasi = "Luar";
-                  }
-                  else if($val['AKOMODASI'] == '3'){
-                    $akomodasi = "Mess";
-                  }
-                  else{
-                    $akomodasi = "-";
-                  }
+            $viewaction = "
+              <button class='btn btn-sm btn-dark'
+                onclick=\"viewpjk('{$val['ID']}')\">
+                <i class='bi bi-search'></i> View
+              </button>
+            ";
+        ?>
 
-                  if($val['KENDARAAN'] == '1'){
-                    $kendaraan = "Dinas";
-                  }
-                  else if($val['KENDARAAN'] == '2'){
-                    $kendaraan = "Kereta Api";
-                  }
-                  else if($val['KENDARAAN'] == '3'){
-                    $kendaraan = "Bus";
-                  }
-                  else if($val['KENDARAAN'] == '4'){
-                    $kendaraan = "Kapal";
-                  }
-                  else if($val['KENDARAAN'] == '5'){
-                    $kendaraan = "Pesawat";
-                  }
-                  else if($val['KENDARAAN'] == '6'){
-                    $kendaraan = "Lain-lain";
-                  }
-                  else{
-                    $kendaraan = "-";
-                  }
+        <!-- CARD ITEM -->
+        <div class="border rounded p-3 mb-3 bg-light">
 
-                   $viewaction = "<button class='btn m-1 btn-sm btn-dark'
-                        onclick=\"viewpjk('{$val['ID']}')\">
-                        <i class='bi bi-search'></i>
-                      </button>";
-
-                  echo "
-                  <tr>
-                    <td>$viewaction</td>
-                    <td style='display:none'>".$val['BUKTI_PJK']."</td>
-                    <td>".$val['BUKTI']."</td>
-                    <td>".$val['na_peg']."</td>
-                    <td>".$val['AWAL_TUGAS']." s.d ".$val['AKIR_TUGAS']."</td>
-                    <td>".$val['TUJUAN']."</td>
-                    <td>".$val['DALAM_RANGKA']."</td>
-                    <td>".$akomodasi."</td>
-                    <td>".$kendaraan."</td>
-                    <td>".$val['BEBAN']."</td>
-                    <td>".$val['KA']."</td>
-                    <td>".$label_app."</td>
-                    <td>".$btnaction."</td>
-                  </tr>";
-                }
-
-              ?>
-              </tbody>
-            </table>
+          <!-- HEADER -->
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <strong><?php echo $val['BUKTI_PJK']; ?></strong><br>
+              <small class="text-muted">
+                <?php echo $val['AWAL_TUGAS']." s.d ".$val['AKIR_TUGAS']; ?>
+              </small>
             </div>
+            <?php echo $label_app; ?>
+          </div>
+
+          <!-- BODY -->
+          <div class="row small mb-2">
+            <div class="col-12 mb-2">
+              <span class="text-muted">Nama</span><br>
+              <span class="fw-medium"><?php echo $val['na_peg']; ?></span>
+            </div>
+
+            <div class="col-12 mb-2">
+              <span class="text-muted">Tujuan</span><br>
+              <span class="fw-medium"><?php echo $val['TUJUAN']; ?></span>
+            </div>
+
+            <div class="col-12 mb-2">
+              <span class="text-muted">Dalam Rangka</span><br>
+              <span class="fw-medium"><?php echo $val['DALAM_RANGKA']; ?></span>
+            </div>
+
+            <div class="col-6 mb-2">
+              <span class="text-muted">Akomodasi</span><br>
+              <span class="fw-medium"><?php echo $akomodasi; ?></span>
+            </div>
+
+            <div class="col-6 mb-2">
+              <span class="text-muted">Kendaraan</span><br>
+              <span class="fw-medium"><?php echo $kendaraan; ?></span>
+            </div>
+
+            <div class="col-6 mb-2">
+              <span class="text-muted">Beban</span><br>
+              <span class="fw-medium"><?php echo $val['BEBAN']; ?></span>
+            </div>
+
+            <div class="col-6 mb-2">
+              <span class="text-muted">Kode Biaya</span><br>
+              <span class="fw-medium"><?php echo $val['KA']; ?></span>
             </div>
           </div>
 
-          <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen-md-down">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h6 class="modal-title" id="fullscreenModalLabel">View PJK SPPD</h6>
-                  <button class="btn btn-close p-1 ms-auto" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-               
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-sm btn-danger" type="button" data-bs-dismiss="modal">Close</button>
-                  <!-- <button class="btn btn-sm btn-success" type="button">Save</button> -->
-                </div>
-              </div>
-            </div>
+          <!-- FOOTER -->
+          <div class="d-flex justify-content-between align-items-center">
+            <?php echo $viewaction; ?>
+            <?php echo $btnaction; ?>
           </div>
 
+        </div>
+        <!-- END CARD ITEM -->
+
+        <?php } ?>
+
+      </div>
+    </div>
+    </div>
+
+    <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen-md-down">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title" id="fullscreenModalLabel">View PJK SPPD</h6>
+            <button class="btn btn-close p-1 ms-auto" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+          
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-sm btn-danger" type="button" data-bs-dismiss="modal">Close</button>
+            <!-- <button class="btn btn-sm btn-success" type="button">Save</button> -->
+          </div>
+        </div>
       </div>
     </div>
   </div>

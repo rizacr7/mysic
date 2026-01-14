@@ -80,6 +80,24 @@
         View Cuti
         <i class="bi bi-arrow-right"></i>
       </a>
+
+      <div class="affan-element-item">
+        <div class="element-heading-wrapper">
+          <i class="bi bi-car-front"></i>
+          <div class="heading-text">
+            <h6 class="mb-1">Pengajuan Kendaraan Pool</h6>
+          </div>
+        </div>
+      </div>
+
+      <a class="affan-element-item" href="<?php echo base_url('index.php/umum/request_kendaraan'); ?>">
+        Form Pengajuan Kendaraan
+        <i class="bi bi-arrow-right"></i>
+      </a>
+     <a class="affan-element-item" href="<?php echo base_url('index.php/umum/datarequest_kendaraan'); ?>">
+        View Pengajuan Kendaraan
+        <i class="bi bi-arrow-right"></i>
+      </a>
       
   </div>
 </div>

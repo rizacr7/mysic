@@ -95,7 +95,10 @@ class Sdm_model extends CI_Model{
 
 		$query = "Select a.*,b.na_peg from t_izin a 
 		left join mas_peg b on a.no_peg = b.no_peg 
-		where a.no_peg = '$no_peg' and a.status_hapus = 0 AND YEAR(a.tgl_izin) BETWEEN $lastyear AND $year order by tgl_izin desc;";
+		where a.no_peg = '$no_peg' and a.status_hapus = 0 AND a.tgl_izin >= DATE_FORMAT(
+			DATE_SUB(CURDATE(), INTERVAL 3 MONTH),
+			'%Y-%m-01'
+		) order by tgl_izin desc;";
 		$result = $this->db_hrdonline->query($query)->result_array();
 		return $result;  
 	}

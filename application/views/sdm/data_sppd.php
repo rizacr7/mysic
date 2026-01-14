@@ -10,125 +10,122 @@
   <div class="container">
     <div class="card">
       <div class="card-body">
-          <div class="spinner-border text-primary" role="status" style="display:none" align="center" id="loading">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="row">
-            <div class="col-12 col-md-12">
-              <div class="table-responsive">
-              <table class="display nowrap" style="width:100%" id="dataTable">
-              <thead>
-                <tr>
-                  <th>Bukti</th>
-                  <th>Nama</th>
-                  <th>Tgl.SPPD</th>
-                  <th>Tujuan</th>
-                  <th>Akomodasi</th>
-                  <th>Kendaraan</th>
-                  <th>Keterangan</th>
-                  <th>Status</th>
-                  <th>Pjk</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-              <?php 
-                $no_peg = $Datapeg[0]->no_peg;
-                $param = array();
-                $param['no_peg'] = $no_peg;
-                $dataresult = $this->sdm_model->sppdpegawai($param);
 
-                foreach($dataresult as $key => $val){
+        <div class="spinner-border text-primary mb-3"
+            role="status" style="display:none" id="loading">
+          <span class="visually-hidden">Loading...</span>
+        </div>
 
-                  $tgl_input = $val['TGL_UPDATE'];
-                  $id_sppd = $val['ID'];
+        <?php 
+          $no_peg = $Datapeg[0]->no_peg;
+          $param['no_peg'] = $no_peg;
+          $dataresult = $this->sdm_model->sppdpegawai($param);
 
-                  $tgl_input_date = new DateTime($tgl_input);
-                  $tgl_sekarang   = new DateTime(date('Y-m-d'));
+          foreach($dataresult as $val){
 
-                  $selisih = $tgl_input_date->diff($tgl_sekarang)->days;
+            /* ===== Mapping ===== */
+            if($val['AKOMODASI'] == 1){
+              $akomodasi = "Hotel";
+            }
+            else if($val['AKOMODASI'] == 2){
+              $akomodasi = "Luar";
+            }
+            else if($val['AKOMODASI'] == 3){
+              $akomodasi = "Mess";
+            }
+            else{
+              $akomodasi = "-";
+            }
+            
+            if($val['KENDARAAN'] == 1){
+              $kendaraan = "Dinas";
+            }
+            else if($val['KENDARAAN'] == 2){
+              $kendaraan = "Kereta Api";
+            }
+            else if($val['KENDARAAN'] == 3){
+              $kendaraan = "Bus";
+            }
+            else if($val['KENDARAAN'] == 4){
+              $kendaraan = "Kapal";
+            }
+            else if($val['KENDARAAN'] == 5){
+              $kendaraan = "Pesawat";
+            }
+            else{
+              $kendaraan = "Lain-Lain";
+            }
 
-                  if ($val['APPROVE'] == '0') {
-                      $btnaction = "<button class='btn m-1 btn-sm btn-danger'
-                        onclick=\"hapussppd('{$val['ID']}')\">
-                        <i class='bi bi-trash'></i>
-                      </button>";
-                  } else {
-                      $btnaction = ""; // kosongkan
-                  }
 
-                  if($val['APPROVE'] == '1'){
-                    $label_app = "<span class='m-1 badge rounded-pill bg-primary'>Approved</span>";
-                  }
-                  else{
-                    $label_app = "<span class='m-1 badge rounded-pill bg-danger'>Pending</span>";
-                  }
-                  
-                  if($val['STS_PJK'] == '1'){
-                    $label_pjk = "<span class='m-1 badge rounded-pill bg-success'><i class='bi bi-check2-circle'></i></span>";
-                  }
-                  else{
-                    $label_pjk = "<span class='m-1 badge rounded-pill bg-danger'><i class='bi bi-dash-circle'></i></span>";
-                  }
+            $label_app = ($val['APPROVE'] == '1')
+              ? "<span class='badge rounded-pill bg-primary'>Approved</span>"
+              : "<span class='badge rounded-pill bg-danger'>Pending</span>";
 
-                  if($val['AKOMODASI'] == '1'){
-                    $akomodasi = "Hotel";
-                  }
-                  else if($val['AKOMODASI'] == '2'){
-                    $akomodasi = "Luar";
-                  }
-                  else if($val['AKOMODASI'] == '3'){
-                    $akomodasi = "Mess";
-                  }
-                  else{
-                    $akomodasi = "-";
-                  }
+            $label_pjk = ($val['STS_PJK'] == '1')
+              ? "<span class='badge rounded-pill bg-success'><i class='bi bi-check2-circle'></i> PJK</span>"
+              : "<span class='badge rounded-pill bg-danger'><i class='bi bi-dash-circle'></i> PJK</span>";
 
-                  if($val['KENDARAAN'] == '1'){
-                    $kendaraan = "Dinas";
-                  }
-                  else if($val['KENDARAAN'] == '2'){
-                    $kendaraan = "Kereta Api";
-                  }
-                  else if($val['KENDARAAN'] == '3'){
-                    $kendaraan = "Bus";
-                  }
-                  else if($val['KENDARAAN'] == '4'){
-                    $kendaraan = "Kapal";
-                  }
-                  else if($val['KENDARAAN'] == '5'){
-                    $kendaraan = "Pesawat";
-                  }
-                  else if($val['KENDARAAN'] == '6'){
-                    $kendaraan = "Lain-lain";
-                  }
-                  else{
-                    $kendaraan = "-";
-                  }
+            $btnaction = ($val['APPROVE'] == '0')
+              ? "<button class='btn btn-sm btn-danger'
+                  onclick=\"hapussppd('{$val['ID']}')\">
+                  <i class='bi bi-trash'></i> Hapus
+                </button>"
+              : "";
+        ?>
 
-                  echo "
-                  <tr>
-                    <td>".$val['BUKTI']."</td>
-                    <td>".$val['na_peg']."</td>
-                    <td>".$val['TGL_AWAL']." s.d ".$val['TGL_AKHIR']."</td>
-                    <td>".$val['TUJUAN']."</td>
-                    <td>".$val['DALAM_RANGKA']."</td>
-                    <td>".$akomodasi."</td>
-                    <td>".$kendaraan."</td>
-                    <td>".$label_app."</td>
-                    <td>".$label_pjk."</td>
-                    <td>".$btnaction."</td>
-                  </tr>";
-                }
+        <div class="border rounded p-3 mb-3 bg-light">
 
-              ?>
-              </tbody>
-            </table>
+          <!-- HEADER -->
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <strong><?php echo $val['na_peg']; ?></strong><br>
+              <small class="text-muted">
+                <?php echo $val['TGL_AWAL']." s.d ".$val['TGL_AKHIR']; ?>
+              </small>
             </div>
+            <?php echo $label_app; ?>
+          </div>
+
+          <!-- BODY -->
+          <div class="row small mb-2">
+            <div class="col-6 mb-2">
+              <span class="text-muted">Bukti</span><br>
+              <span class="fw-medium"><?php echo $val['BUKTI']; ?></span>
+            </div>
+            <div class="col-6 mb-2">
+              <span class="text-muted">Tujuan</span><br>
+              <span class="fw-medium"><?php echo $val['TUJUAN']; ?></span>
+            </div>
+
+            <div class="col-12 mb-2">
+              <span class="text-muted">Dalam Rangka</span><br>
+              <span class="fw-medium"><?php echo $val['DALAM_RANGKA']; ?></span>
+            </div>
+
+            <div class="col-6 mb-2">
+              <span class="text-muted">Akomodasi</span><br>
+              <span class="fw-medium"><?php echo $akomodasi; ?></span>
+            </div>
+
+            <div class="col-6 mb-2">
+              <span class="text-muted">Kendaraan</span><br>
+              <span class="fw-medium"><?php echo $kendaraan; ?></span>
             </div>
           </div>
+
+          <!-- FOOTER -->
+          <div class="d-flex justify-content-between align-items-center">
+            <?php echo $label_pjk; ?>
+            <?php echo $btnaction; ?>
+          </div>
+
+        </div>
+
+        <?php } ?>
+
       </div>
     </div>
+
   </div>
 </div>
 
