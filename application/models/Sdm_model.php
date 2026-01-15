@@ -635,7 +635,10 @@ class Sdm_model extends CI_Model{
 		LEFT JOIN m_unit c ON a.UNIT = c.kd_unit
 		LEFT JOIN m_bagian d ON c.kd_bagian = d.kd_bagian
 		LEFT JOIN t_sppd e ON a.BUKTI = e.BUKTI
-		where a.APPROVE_ATASAN =0 and a.HAPUS = 0 ".$whereunit." order by a.AWAL_TUGAS desc;";
+		where a.APPROVE_ATASAN =0 and a.HAPUS = 0 ".$whereunit." AND a.AWAL_TUGAS >= DATE_FORMAT(
+			DATE_SUB(CURDATE(), INTERVAL 4 MONTH),
+			'%Y-%m-01'
+		) order by a.AWAL_TUGAS desc;";
 		
 		$result = $this->db_hrdonline->query($query)->result_array();
 		return $result; 
@@ -689,7 +692,10 @@ class Sdm_model extends CI_Model{
 		LEFT JOIN m_unit c ON a.UNIT = c.kd_unit
 		LEFT JOIN m_bagian d ON c.kd_bagian = d.kd_bagian
 		LEFT JOIN t_sppd e ON a.BUKTI = e.BUKTI
-		where a.APPROVE_ATASAN =1 and a.HAPUS = 0 ".$whereunit." order by a.AWAL_TUGAS desc;";
+		where a.APPROVE_ATASAN =1 and a.HAPUS = 0 ".$whereunit."  AND a.TGL_APP >= DATE_FORMAT(
+			DATE_SUB(CURDATE(), INTERVAL 4 MONTH),
+			'%Y-%m-01'
+		) order by a.AWAL_TUGAS desc;";
 		
 		$result = $this->db_hrdonline->query($query)->result_array();
 		return $result; 
