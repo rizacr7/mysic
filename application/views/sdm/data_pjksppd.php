@@ -10,7 +10,8 @@
   <div class="container">
     <div class="card">
       <div class="card-body">
-
+        <button type="button" class="btn btn-danger w-100" onclick="kembali()" id="btnsimpan"><i class='bi bi-arrow-left-circle'></i> Back</button>
+        <p></p>
         <div class="spinner-border text-primary mb-3"
             role="status" style="display:none" id="loading">
           <span class="visually-hidden">Loading...</span>
@@ -241,5 +242,8 @@ function viewpjk(id_pjk) {
     });
 }
 
+function kembali(){
+   window.location.href='<?php echo base_url(); ?>index.php/sdm/pagemenu';
+}
 </script>
 	

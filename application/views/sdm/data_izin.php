@@ -10,12 +10,13 @@
   <div class="container">
     <div class="card">
       <div class="card-body">
-
+        <button type="button" class="btn btn-danger w-100" onclick="kembali()" id="btnsimpan"><i class='bi bi-arrow-left-circle'></i> Back</button>
+        <p></p>
         <div class="spinner-border text-primary mb-3" role="status"
             style="display:none" id="loading">
           <span class="visually-hidden">Loading...</span>
         </div>
-
+        
         <?php 
           $no_peg = $Datapeg[0]->no_peg;
           $param['no_peg'] = $no_peg;
@@ -34,7 +35,7 @@
             } else {
               $status = "<span class='badge rounded-pill bg-warning'>Pending</span>";
 
-              if ($tgl_sekarang <= $tgl_input->modify('+3 days')) {
+              if ($val['flag_app'] == 0) {
                 $btnaction = "
                   <button class='btn btn-sm btn-danger'
                     onclick=\"hapusizin('{$val['id_izin']}')\">
@@ -126,6 +127,10 @@ function hapusizin(id_izin) {
           });
       }
   });
+}
+
+function kembali(){
+   window.location.href='<?php echo base_url(); ?>index.php/sdm/pagemenu';
 }
 </script>
 	
