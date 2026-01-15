@@ -11,99 +11,105 @@
     <div class="card">
       <div class="card-body">
 
-          <button type="button" class="btn btn-danger w-100" onclick="kembali()" id="btnsimpan"><i class='bi bi-arrow-left-circle'></i> Back</button>
+        <!-- BACK -->
+        <button type="button" class="btn btn-danger w-100 mb-3"
+                onclick="kembali()" id="btnsimpan">
+          <i class="bi bi-arrow-left-circle"></i> Back
+        </button>
 
-          <div class="spinner-border text-primary" role="status" style="display:none" align="center" id="loading">
+        <!-- LOADING -->
+        <div class="text-center mb-3">
+          <div class="spinner-border text-primary"
+              role="status"
+              style="display:none"
+              id="loading">
             <span class="visually-hidden">Loading...</span>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col-12 col-md-12">
-              <p></p>
-              <button class="btn btn-primary btn-sm mb-2" onclick="approveSelected()">
-                <i class="bi bi-check2-square"></i> Approve Izin Pegawai
-              </button>
+        <div class="d-flex gap-2 mb-3">
+          <button type="button"
+                  class="btn btn-outline-secondary btn-sm w-50"
+                  onclick="selectAllMobile(true)">
+            <i class="bi bi-check-square"></i> Select All
+          </button>
 
-              <div class="table-responsive">
-              <table class="display nowrap" style="width:100%" id="dataTable">
-              <thead>
-                <tr>
-                  <th>
-                    <input type="checkbox" id="checkAll">
-                  </th>
-                  <th>Tgl.Izin</th>
-                  <th>Nama</th>
-                  <th>Jenis</th>
-                  <th>Keterangan</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-              <?php 
-                $no_peg = $Datapeg[0]->no_peg;
-                $param = array();
-                $param['no_peg'] = $no_peg;
-                $param['kd_unit'] = $Datapeg[0]->kd_unit;
-                $param['kd_bagian'] = $Datapeg[0]->kd_bagian;
-                $param['kd_jab'] = $Datapeg[0]->kd_jab;
-                $param['kd_level'] = $Datapeg[0]->kd_level;
-                $dataresultapp = $this->sdm_model->appizinpegawai($param);
+          <button type="button"
+                  class="btn btn-outline-secondary btn-sm w-50"
+                  onclick="selectAllMobile(false)">
+            <i class="bi bi-square"></i> Unselect All
+          </button>
+        </div>
 
-                foreach($dataresultapp as $key => $val){
+        <!-- APPROVE BUTTON -->
+        <button class="btn btn-primary btn-sm mb-3 w-100"
+                onclick="approveSelected()">
+          <i class="bi bi-check2-square"></i> Approve Izin Pegawai
+        </button>
 
-                  $tgl_input = $val['tgl_input'];
-                  $id_izin = $val['id_izin'];
+        <!-- LIST CARD -->
+        <div class="row">
+        <?php 
+          $no_peg = $Datapeg[0]->no_peg;
+          $param = [
+            'no_peg'     => $no_peg,
+            'kd_unit'    => $Datapeg[0]->kd_unit,
+            'kd_bagian'  => $Datapeg[0]->kd_bagian,
+            'kd_jab'     => $Datapeg[0]->kd_jab,
+            'kd_level'   => $Datapeg[0]->kd_level
+          ];
 
-                  if($val['kdizin'] == 1){
-                    $kdizin = "Terlambat";
-                  }
-                  else{
-                    $kdizin = "Pulang Cepat";
-                  }
+          $dataresultapp = $this->sdm_model->appizinpegawai($param);
 
-                  $tgl_input_date = new DateTime($tgl_input);
-                  $tgl_sekarang   = new DateTime(date('Y-m-d'));
+          foreach($dataresultapp as $val){
 
-                  $selisih = $tgl_input_date->diff($tgl_sekarang)->days;
-                
+            $kdizin = ($val['kdizin'] == 1)
+              ? "Terlambat"
+              : "Pulang Cepat";
 
-                  if($val['flag_app'] == 1){
-                    $btnaction = ""; // kosongkan
-                    $status = "<span class='m-1 badge rounded-pill bg-primary'>Approved</span>";
-                  }
-                  else{
-                    $status = "<span class='m-1 badge rounded-pill bg-warning'>Pending</span>";
-                    $btnaction = "<input type='checkbox' class='checkItem' value='{$val['id_izin']}'>";
+            if($val['flag_app'] == 1){
+              $status = "<span class='badge bg-primary'>Approved</span>";
+              $checkbox = "";
+            } else {
+              $status = "<span class='badge bg-warning text-dark'>Pending</span>";
+              $checkbox = "<input type='checkbox'
+                              class='form-check-input checkItem me-2'
+                              value='{$val['id_izin']}'>";
+            }
+        ?>
+          <div class="col-12 mb-3">
+            <div class="card shadow-sm border-0">
+              <div class="card-body bg-light">
 
-                    // if ($tgl_sekarang <= $tgl_input_date->modify('+5 days')) {
-                    //     $btnaction = "<button class='btn m-1 btn-sm btn-info'
-                    //       onclick=\"appizin('{$val['id_izin']}')\">
-                    //       <i class='bi bi-check-square-fill'></i>
-                    //     </button>";
-                    // } else {
-                    //     $btnaction = ""; // kosongkan
-                    // }
-                  }
+                <!-- HEADER -->
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div>
+                    <?= $checkbox ?>
+                    <strong><?= $val['na_peg'] ?></strong>
+                  </div>
+                  <?= $status ?>
+                </div>
 
-                  echo "
-                  <tr>
-                    <td>".$btnaction."</td>
-                    <td>".$val['tgl_izin']."</td>
-                    <td>".$val['na_peg']."</td>
-                    <td>".$kdizin."</td>
-                    <td>".$val['keterangan']."</td>
-                    <td>".$status."</td>
-                  </tr>";
-                }
-                
+                <!-- DATE -->
+                <div class="small text-muted mb-2">
+                  <i class="bi bi-calendar-event"></i>
+                  <?= $val['tgl_izin'] ?>
+                </div>
 
-              ?>
-              </tbody>
-            </table>
-            </div>
+                <!-- DETAIL -->
+                <ul class="list-unstyled small mb-0">
+                  <li><b>Jenis Izin:</b> <?= $kdizin ?></li>
+                  <li><b>Keterangan:</b> <?= $val['keterangan'] ?></li>
+                </ul>
+
+              </div>
             </div>
           </div>
+        <?php } ?>
+        </div>
+
       </div>
+
     </div>
   </div>
 </div>
@@ -136,11 +142,17 @@
 
 });
 
+function selectAllMobile(status) {
+  document.querySelectorAll('.checkItem').forEach(function(cb) {
+    cb.checked = status;
+  });
+}
+
 function approveSelected() {
     let ids = [];
 
-    $('.checkItem:checked').each(function () {
-        ids.push($(this).val());
+    document.querySelectorAll('.checkItem:checked').forEach(function(cb) {
+      ids.push(cb.value);
     });
 
     if (ids.length === 0) {

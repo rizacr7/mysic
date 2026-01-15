@@ -12,87 +12,86 @@
       <div class="card-body">
 
           <button type="button" class="btn btn-danger w-100" onclick="kembali()" id="btnsimpan"><i class='bi bi-arrow-left-circle'></i> Back</button>
-
+          <p></p>
           <div class="spinner-border text-primary" role="status" style="display:none" align="center" id="loading">
             <span class="visually-hidden">Loading...</span>
           </div>
 
           <div class="row">
-            <div class="col-12 col-md-12">
-              <div class="table-responsive">
-              <table class="display nowrap" style="width:100%" id="dataTable">
-              <thead>
-                <tr>
-                  <th>Action</th>
-                  <th>Tgl.Izin</th>
-                  <th>Nama</th>
-                  <th>Jenis</th>
-                  <th>Keterangan</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-              <?php 
-                $no_peg = $Datapeg[0]->no_peg;
-                $param = array();
-                $param['no_peg'] = $no_peg;
-                $param['kd_unit'] = $Datapeg[0]->kd_unit;
-                $param['kd_bagian'] = $Datapeg[0]->kd_bagian;
-                $param['kd_jab'] = $Datapeg[0]->kd_jab;
-                $param['kd_level'] = $Datapeg[0]->kd_level;
-                $dataresultapp = $this->sdm_model->viewappizinpegawai($param);
+            <?php 
+              $no_peg = $Datapeg[0]->no_peg;
+              $param = [
+                'no_peg'     => $no_peg,
+                'kd_unit'    => $Datapeg[0]->kd_unit,
+                'kd_bagian'  => $Datapeg[0]->kd_bagian,
+                'kd_jab'     => $Datapeg[0]->kd_jab,
+                'kd_level'   => $Datapeg[0]->kd_level
+              ];
 
-                foreach($dataresultapp as $key => $val){
+              $dataresultapp = $this->sdm_model->viewappizinpegawai($param);
 
-                  $tgl_input = $val['tgl_input'];
-                  $tgl_app = $val['tgl_app'];
-                  $id_izin = $val['id_izin'];
+              foreach($dataresultapp as $val){
 
-                  if($val['kdizin'] == 1){
-                    $kdizin = "Terlambat";
+                $batalBtn = "";
+
+                if ($val['flag_app'] == 1 && !empty($val['tgl_app'])) {
+
+                  $tglApprove   = new DateTime(date('Y-m-d', strtotime($val['tgl_app'])));
+                  $tglSekarang  = new DateTime(date('Y-m-d'));
+                  $selisihHari  = $tglApprove->diff($tglSekarang)->days;
+
+                  if ($tglSekarang >= $tglApprove && $selisihHari <= 3) {
+                    $batalBtn = "
+                      <button type='button'
+                        class='btn btn-sm btn-danger mt-2 w-100'
+                        onclick=\"batalizin('{$val['id_izin']}')\">
+                        <i class='bi bi-x-circle'></i> Batal Approve
+                      </button>
+                    ";
                   }
-                  else{
-                    $kdizin = "Pulang Cepat";
-                  }
-
-                  $tgl_input_date = new DateTime($tgl_app);
-                  $tgl_sekarang   = new DateTime(date('Y-m-d'));
-
-                  $selisih = $tgl_input_date->diff($tgl_sekarang)->days;
-                
-
-                  if($val['flag_app'] == 1){
-                    if ($tgl_sekarang <= $tgl_input_date->modify('+3 days')) {
-                        $btnaction = "<button class='btn m-1 btn-sm btn-warning'
-                          onclick=\"batalizin('{$val['id_izin']}')\">
-                         <i class='bi bi-arrow-clockwise'></i>
-                        </button>";
-                    } else {
-                        $btnaction = ""; // kosongkan
-                    }
-                    $status = "<span class='m-1 badge rounded-pill bg-primary'>Approved</span>";
-                  }
-                  else{
-                    $status = "<span class='m-1 badge rounded-pill bg-warning'>Pending</span>";
-                  }
-
-                  echo "
-                  <tr>
-                    <td>".$btnaction."</td>
-                    <td>".$val['tgl_izin']."</td>
-                    <td>".$val['na_peg']."</td>
-                    <td>".$kdizin."</td>
-                    <td>".$val['keterangan']."</td>
-                    <td>".$status."</td>
-                  </tr>";
                 }
 
-              ?>
-              </tbody>
-            </table>
+                $kdizin = ($val['kdizin'] == 1) ? "Terlambat" : "Pulang Cepat";
+
+                if($val['flag_app'] == 1){
+                  $status = "<span class='badge bg-primary'>Approved</span>";
+                  $checkbox = "";
+                } else {
+                  $status = "<span class='badge bg-warning text-dark'>Pending</span>";
+                  $checkbox = "<input type='checkbox' class='form-check-input checkItem' value='{$val['id_izin']}'>";
+                }
+            ?>
+              <div class="col-12 mb-3">
+                <div class="card shadow-sm border-0">
+                  <div class="card-body bg-light">
+
+                    <!-- HEADER -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <div>
+                        <?= $checkbox ?>
+                        <strong class="ms-1"><?= $val['na_peg'] ?></strong>
+                      </div>
+                      <?= $status ?>
+                    </div>
+
+                    <!-- TANGGAL -->
+                    <div class="small text-muted mb-2">
+                      <i class="bi bi-calendar-event"></i> <?= $val['tgl_izin'] ?>
+                    </div>
+
+                    <!-- DETAIL -->
+                    <ul class="list-unstyled small mb-0">
+                      <li><b>Jenis Izin:</b> <?= $kdizin ?></li>
+                      <li><b>Keterangan:</b> <?= $val['keterangan'] ?></li>
+                    </ul>
+                    <?= $batalBtn ?>
+
+                  </div>
+                </div>
+              </div>
+            <?php } ?>
             </div>
-            </div>
-          </div>
+
       </div>
     </div>
   </div>

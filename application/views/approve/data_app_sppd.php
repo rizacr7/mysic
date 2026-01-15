@@ -12,102 +12,110 @@
       <div class="card-body">
 
           <button type="button" class="btn btn-danger w-100" onclick="kembali()" id="btnsimpan"><i class='bi bi-arrow-left-circle'></i> Back</button>
-
+          <p></p>
           <div class="spinner-border text-primary" role="status" style="display:none" align="center" id="loading">
             <span class="visually-hidden">Loading...</span>
           </div>
 
           <div class="row">
             <div class="col-12">
-              <p></p>
-              <!-- BUTTON MULTI APPROVE -->
-              <button class="btn btn-primary btn-sm mb-2" onclick="approveSelected()">
-                <i class="bi bi-check2-square"></i> Approve SPPD
-              </button>
 
-              <div class="table-responsive">
-                <table id="dataTable" class="display nowrap" style="width:100%">
-                  <thead>
-                    <tr>
-                      <th>
-                        <input type="checkbox" id="checkAll">
-                      </th>
-                      <th>Bukti</th>
-                      <th>Nama</th>
-                      <th>Tgl. SPPD</th>
-                      <th>Tujuan</th>
-                      <th>Dalam Rangka</th>
-                      <th>Akomodasi</th>
-                      <th>Kendaraan</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
+              <!-- ACTION BUTTON -->
+              <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-secondary btn-sm" onclick="toggleSelectAll()">
+                  <i class="bi bi-check-all"></i> Select All
+                </button>
 
-                  <tbody>
-                  <?php 
-                    $param = [
-                      'no_peg'    => $Datapeg[0]->no_peg,
-                      'kd_unit'   => $Datapeg[0]->kd_unit,
-                      'kd_bagian' => $Datapeg[0]->kd_bagian,
-                      'kd_jab'    => $Datapeg[0]->kd_jab,
-                      'kd_level'  => $Datapeg[0]->kd_level
-                    ];
-
-                    $dataresultapp = $this->sdm_model->appsppdpegawai($param);
-
-                    if (!empty($dataresultapp) && is_array($dataresultapp)) {
-                      foreach ($dataresultapp as $val) {
-
-                        // === ACTION CHECKBOX ===
-                        if ($val['APPROVE'] == '0') {
-                          $action = "<input type='checkbox' class='checkItem' value='{$val['ID']}'>";
-                          $status = "<span class='badge rounded-pill bg-danger'>Pending</span>";
-                        } else {
-                          $action = "";
-                          $status = "<span class='badge rounded-pill bg-primary'>Approved</span>";
-                        }
-
-                        // === AKOMODASI ===
-                        switch ($val['AKOMODASI']) {
-                          case '1': $akomodasi = 'Hotel'; break;
-                          case '2': $akomodasi = 'Luar'; break;
-                          case '3': $akomodasi = 'Mess'; break;
-                          default:  $akomodasi = '-';
-                        }
-
-                        // === KENDARAAN ===
-                        switch ($val['KENDARAAN']) {
-                          case '1': $kendaraan = 'Dinas'; break;
-                          case '2': $kendaraan = 'Kereta Api'; break;
-                          case '3': $kendaraan = 'Bus'; break;
-                          case '4': $kendaraan = 'Kapal'; break;
-                          case '5': $kendaraan = 'Pesawat'; break;
-                          case '6': $kendaraan = 'Lain-lain'; break;
-                          default:  $kendaraan = '-';
-                        }
-
-                        echo "
-                        <tr>
-                          <td>{$action}</td>
-                          <td>{$val['BUKTI']}</td>
-                          <td>{$val['na_peg']}</td>
-                          <td>{$val['TGL_AWAL']} s.d {$val['TGL_AKHIR']}</td>
-                          <td>{$val['TUJUAN']}</td>
-                          <td>{$val['DALAM_RANGKA']}</td>
-                          <td>{$akomodasi}</td>
-                          <td>{$kendaraan}</td>
-                          <td>{$status}</td>
-                        </tr>";
-                      }
-                    } else {
-                      echo "<tr><td colspan='9' class='text-center'>Data tidak ditemukan</td></tr>";
-                    }
-                  ?>
-                  </tbody>
-                </table>
+                <button class="btn btn-primary btn-sm" onclick="approveSelected()">
+                  <i class="bi bi-check2-square"></i> Approve SPPD
+                </button>
               </div>
+
+              <?php 
+                $param = [
+                  'no_peg'    => $Datapeg[0]->no_peg,
+                  'kd_unit'   => $Datapeg[0]->kd_unit,
+                  'kd_bagian' => $Datapeg[0]->kd_bagian,
+                  'kd_jab'    => $Datapeg[0]->kd_jab,
+                  'kd_level'  => $Datapeg[0]->kd_level
+                ];
+
+                $dataresultapp = $this->sdm_model->appsppdpegawai($param);
+
+                if (!empty($dataresultapp)) {
+                  foreach ($dataresultapp as $val) {
+
+                    // STATUS & CHECKBOX
+                    if ($val['APPROVE'] == '0') {
+                      $checkbox = "<input type='checkbox' class='form-check-input checkItem' value='{$val['ID']}'>";
+                      $status   = "<span class='badge bg-danger'>Pending</span>";
+                    } else {
+                      $checkbox = "";
+                      $status   = "<span class='badge bg-primary'>Approved</span>";
+                    }
+
+                    // AKOMODASI
+                    switch ($val['AKOMODASI']) {
+                      case '1': $akomodasi = 'Hotel'; break;
+                      case '2': $akomodasi = 'Luar'; break;
+                      case '3': $akomodasi = 'Mess'; break;
+                      default:  $akomodasi = '-';
+                    }
+
+                    // === KENDARAAN ===
+                    switch ($val['KENDARAAN']) {
+                      case '1': $kendaraan = 'Dinas'; break;
+                      case '2': $kendaraan = 'Kereta Api'; break;
+                      case '3': $kendaraan = 'Bus'; break;
+                      case '4': $kendaraan = 'Kapal'; break;
+                      case '5': $kendaraan = 'Pesawat'; break;
+                      case '6': $kendaraan = 'Lain-lain'; break;
+                      default:  $kendaraan = '-';
+                    }
+              ?>
+
+              <div class="col-12 mb-3">
+                <div class="card shadow-sm border-0">
+                  <div class="card-body bg-light">
+
+                    <!-- HEADER -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <div>
+                        <?= $checkbox ?>
+                        <strong class="ms-1"><?= $val['na_peg'] ?></strong>
+                      </div>
+                      <?= $status ?>
+                    </div>
+
+                    <!-- TANGGAL -->
+                    <div class="small text-muted mb-2">
+                      <i class="bi bi-calendar-event"></i>
+                      <?= $val['TGL_AWAL'] ?> s.d <?= $val['TGL_AKHIR'] ?>
+                    </div>
+
+                    <!-- DETAIL -->
+                    <ul class="list-unstyled small mb-0">
+                      <li><b>Bukti:</b> <?= $val['BUKTI'] ?></li>
+                      <li><b>Tujuan:</b> <?= $val['TUJUAN'] ?></li>
+                      <li><b>Dalam Rangka:</b> <?= $val['DALAM_RANGKA'] ?></li>
+                      <li><b>Akomodasi:</b> <?= $akomodasi ?></li>
+                      <li><b>Kendaraan:</b> <?= $kendaraan ?></li>
+                    </ul>
+
+                  </div>
+                </div>
+              </div>
+
+              <?php 
+                  }
+                } else {
+                  echo "<div class='col-12 text-center text-muted'>Data tidak ditemukan</div>";
+                }
+              ?>
+
             </div>
           </div>
+
       </div>
     </div>
   </div>
@@ -140,6 +148,17 @@
     });
 
 });
+
+let isAllSelected = false;
+
+function toggleSelectAll() {
+  const items = document.querySelectorAll('.checkItem');
+  isAllSelected = !isAllSelected;
+
+  items.forEach(item => {
+    item.checked = isAllSelected;
+  });
+}
 
 function approveSelected() {
     let ids = [];

@@ -12,128 +12,109 @@
       <div class="card-body">
 
           <button type="button" class="btn btn-danger w-100" onclick="kembali()" id="btnsimpan"><i class='bi bi-arrow-left-circle'></i> Back</button>
-
+          <p></p>
           <div class="spinner-border text-primary" role="status" style="display:none" align="center" id="loading">
             <span class="visually-hidden">Loading...</span>
           </div>
 
           <div class="row">
-            <div class="col-12 col-md-12">
-              <div class="table-responsive">
-              <table class="display nowrap" style="width:100%" id="dataTable">
-              <thead>
-                <tr>
-                  <th>Action</th>
-                  <th>Bukti</th>
-                  <th>Nama</th>
-                  <th>Tgl.SPPD</th>
-                  <th>Tujuan</th>
-                  <th>Akomodasi</th>
-                  <th>Kendaraan</th>
-                  <th>Keterangan</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-              <?php 
-                $no_peg = $Datapeg[0]->no_peg;
-                $param = array();
-                $param['no_peg'] = $no_peg;
-                $param['kd_unit'] = $Datapeg[0]->kd_unit;
-                $param['kd_bagian'] = $Datapeg[0]->kd_bagian;
-                $param['kd_jab'] = $Datapeg[0]->kd_jab;
-                $param['kd_level'] = $Datapeg[0]->kd_level;
-                $dataresultapp = $this->sdm_model->viewappsppdpegawai($param);
+          <?php 
+            $no_peg = $Datapeg[0]->no_peg;
+            $param = array(
+              'no_peg'     => $no_peg,
+              'kd_unit'    => $Datapeg[0]->kd_unit,
+              'kd_bagian'  => $Datapeg[0]->kd_bagian,
+              'kd_jab'     => $Datapeg[0]->kd_jab,
+              'kd_level'   => $Datapeg[0]->kd_level
+            );
 
-                foreach($dataresultapp as $key => $val){
+            $dataresultapp = $this->sdm_model->viewappsppdpegawai($param);
 
-                  $tgl_input = substr($val['TGL_APP'],1,10);
-                  $id_sppd = $val['ID'];
+            foreach($dataresultapp as $val){
 
-                  $tgl_input_date = new DateTime($tgl_input);
-                  $tgl_sekarang   = new DateTime(date('Y-m-d'));
+              $tgl_input = substr($val['TGL_APP'],1,10);
+              $tgl_input_date = new DateTime($tgl_input);
+              $tgl_sekarang   = new DateTime(date('Y-m-d'));
 
-                  $selisih = $tgl_input_date->diff($tgl_sekarang)->days;
+              if ($tgl_sekarang <= $tgl_input_date->modify('+7 days') && $val['STS_PJK'] == '0') {
+                $btnaction = "<button class='btn btn-sm btn-warning'
+                  onclick=\"batalappsppd('{$val['ID']}')\">
+                  <i class='bi bi-arrow-clockwise'></i> Batalkan
+                </button>";
+              } else {
+                $btnaction = "";
+              }
 
-                  if ($tgl_sekarang <= $tgl_input_date->modify('+7 days') && $val['STS_PJK'] == '0') {
-                      $btnaction = "<button class='btn m-1 btn-sm btn-warning'
-                        onclick=\"batalappsppd('{$val['ID']}')\">
-                        <i class='bi bi-arrow-clockwise'></i>
-                      </button>";
-                  } else {
-                      $btnaction = ""; // kosongkan
-                  }
+              $label_app = ($val['APPROVE'] == '1')
+                ? "<span class='badge bg-primary'>Approved</span>"
+                : "<span class='badge bg-danger'>Pending</span>";
 
-                  if($val['APPROVE'] == '1'){
-                    $label_app = "<span class='m-1 badge rounded-pill bg-primary'>Approved</span>";
-                  }
-                  else{
-                    $label_app = "<span class='m-1 badge rounded-pill bg-danger'>Pending</span>";
-                  }
-                  
-                  if($val['STS_PJK'] == '1'){
-                    $label_pjk = "<span class='m-1 badge rounded-pill bg-success'><i class='bi bi-check2-circle'></i></span>";
-                  }
-                  else{
-                    $label_pjk = "<span class='m-1 badge rounded-pill bg-danger'><i class='bi bi-dash-circle'></i></span>";
-                  }
-
-                  if($val['AKOMODASI'] == '1'){
-                    $akomodasi = "Hotel";
-                  }
-                  else if($val['AKOMODASI'] == '2'){
-                    $akomodasi = "Luar";
-                  }
-                  else if($val['AKOMODASI'] == '3'){
-                    $akomodasi = "Mess";
-                  }
-                  else{
-                    $akomodasi = "-";
-                  }
-
-                  if($val['KENDARAAN'] == '1'){
-                    $kendaraan = "Dinas";
-                  }
-                  else if($val['KENDARAAN'] == '2'){
-                    $kendaraan = "Kereta Api";
-                  }
-                  else if($val['KENDARAAN'] == '3'){
-                    $kendaraan = "Bus";
-                  }
-                  else if($val['KENDARAAN'] == '4'){
-                    $kendaraan = "Kapal";
-                  }
-                  else if($val['KENDARAAN'] == '5'){
-                    $kendaraan = "Pesawat";
-                  }
-                  else if($val['KENDARAAN'] == '6'){
-                    $kendaraan = "Lain-lain";
-                  }
-                  else{
-                    $kendaraan = "-";
-                  }
-
-                  echo "
-                  <tr>
-                    <td>".$btnaction."</td>
-                    <td>".$val['BUKTI']."</td>
-                    <td>".$val['na_peg']."</td>
-                    <td>".$val['TGL_AWAL']." s.d ".$val['TGL_AKHIR']."</td>
-                    <td>".$val['TUJUAN']."</td>
-                    <td>".$val['DALAM_RANGKA']."</td>
-                    <td>".$akomodasi."</td>
-                    <td>".$kendaraan."</td>
-                    <td>".$label_app."</td>
-                   
-                  </tr>";
+               if($val['AKOMODASI'] == '1'){
+                  $akomodasi = "Hotel";
+                }
+                else if($val['AKOMODASI'] == '2'){
+                  $akomodasi = "Luar";
+                }
+                else if($val['AKOMODASI'] == '3'){
+                  $akomodasi = "Mess";
+                }
+                else{
+                  $akomodasi = "-";
                 }
 
-              ?>
-              </tbody>
-            </table>
+              if($val['KENDARAAN'] == '1'){
+                $kendaraan = "Dinas";
+              }
+              else if($val['KENDARAAN'] == '2'){
+                $kendaraan = "Kereta Api";
+              }
+              else if($val['KENDARAAN'] == '3'){
+                $kendaraan = "Bus";
+              }
+              else if($val['KENDARAAN'] == '4'){
+                $kendaraan = "Kapal";
+              }
+              else if($val['KENDARAAN'] == '5'){
+                $kendaraan = "Pesawat";
+              }
+              else if($val['KENDARAAN'] == '6'){
+                $kendaraan = "Lain-lain";
+              }
+              else{
+                $kendaraan = "-";
+              }
+          ?>
+            <div class="col-12 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body  bg-light">
+
+                  <div class="d-flex justify-content-between mb-2">
+                    <strong><?= $val['na_peg'] ?></strong>
+                    <?= $label_app ?>
+                  </div>
+
+                  <div class="small text-muted mb-2">
+                    <?= $val['TGL_AWAL'] ?> s.d <?= $val['TGL_AKHIR'] ?>
+                  </div>
+
+                  <ul class="list-unstyled mb-3">
+                    <li><b>Tujuan:</b> <?= $val['TUJUAN'] ?></li>
+                    <li><b>Dalam Rangka:</b> <?= $val['DALAM_RANGKA'] ?></li>
+                    <li><b>Akomodasi:</b> <?= $akomodasi ?></li>
+                    <li><b>Kendaraan:</b> <?= $kendaraan ?></li>
+                  </ul>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div><?= $btnaction ?></div>
+                    <small class="text-muted">Bukti: <?= $val['BUKTI'] ?></small>
+                  </div>
+
+                </div>
+              </div>
             </div>
-            </div>
+          <?php } ?>
           </div>
+
       </div>
     </div>
   </div>

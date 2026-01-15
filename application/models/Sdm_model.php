@@ -167,7 +167,11 @@ class Sdm_model extends CI_Model{
 		left join mas_peg b on a.no_peg = b.no_peg 
 		LEFT JOIN m_unit c ON a.kd_unit = c.kd_unit
 		LEFT JOIN m_bagian d ON c.kd_bagian = d.kd_bagian
-		where a.flag_app=1 and a.status_hapus = 0 ".$whereunit." AND YEAR(a.tgl_izin) BETWEEN $lastyear AND $year order by tgl_izin desc;";
+		where a.flag_app=1 and a.status_hapus = 0 ".$whereunit." AND a.tgl_izin >= DATE_FORMAT(
+			DATE_SUB(CURDATE(), INTERVAL 4 MONTH),
+			'%Y-%m-01'
+		)
+		order by tgl_izin desc;";
 		
 		$result = $this->db_hrdonline->query($query)->result_array();
 		return $result; 
@@ -309,7 +313,10 @@ class Sdm_model extends CI_Model{
 		left join mas_peg b on a.no_peg = b.no_peg 
 		LEFT JOIN m_unit c ON a.kd_unit = c.kd_unit
 		LEFT JOIN m_bagian d ON c.kd_bagian = d.kd_bagian
-		where a.status_approve =0 and a.is_del = 0 and a.cuti_bersama = 0 ".$whereunit." order by a.tanggal desc;";
+		where a.status_approve =0 and a.is_del = 0 and a.cuti_bersama = 0 ".$whereunit." AND a.tanggal >= DATE_FORMAT(
+				DATE_SUB(CURDATE(), INTERVAL 4 MONTH),
+				'%Y-%m-01'
+			) order by a.tanggal desc;";
 		
 		$result = $this->db_hrdonline->query($query)->result_array();
 		return $result; 

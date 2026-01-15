@@ -12,88 +12,89 @@
       <div class="card-body">
 
           <button type="button" class="btn btn-danger w-100" onclick="kembali()" id="btnsimpan"><i class='bi bi-arrow-left-circle'></i> Back</button>
-
+          <p></p>
           <div class="spinner-border text-primary" role="status" style="display:none" align="center" id="loading">
             <span class="visually-hidden">Loading...</span>
           </div>
 
           <div class="row">
             <div class="col-12">
-              <p></p>
-              <!-- BUTTON MULTI APPROVE -->
-              <button class="btn btn-primary btn-sm mb-2" onclick="approveSelected()">
-                <i class="bi bi-check2-square"></i> Approve Cuti
-              </button>
 
-              <div class="table-responsive">
-                <table id="dataTable" class="display nowrap" style="width:100%">
-                  <thead>
-                    <tr>
-                      <th>
-                        <input type="checkbox" id="checkAll">
-                      </th>
-                      <th>Bukti</th>
-                      <th>Nama</th>
-                      <th>Tgl.Cuti</th>
-                      <th>Lama</th>
-                      <th>Keterangan</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
+              <!-- ACTION BUTTON -->
+              <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-secondary btn-sm" onclick="toggleSelectAll()">
+                  <i class="bi bi-check-all"></i> Select All
+                </button>
 
-                  <tbody>
-                  <?php 
-                    $param = [
-                      'no_peg'    => $Datapeg[0]->no_peg,
-                      'kd_unit'   => $Datapeg[0]->kd_unit,
-                      'kd_bagian' => $Datapeg[0]->kd_bagian,
-                      'kd_jab'    => $Datapeg[0]->kd_jab,
-                      'kd_level'  => $Datapeg[0]->kd_level
-                    ];
-
-                    $dataresultapp = $this->sdm_model->appcutipegawai($param);
-
-                    if (!empty($dataresultapp) && is_array($dataresultapp)) {
-                      foreach ($dataresultapp as $val) {
-
-                        // === ACTION CHECKBOX ===
-                        $tgl_input = $val['tgl_update'];
-                        $id_cuti = $val['id'];
-
-                        $tgl_input_date = new DateTime($tgl_input);
-                        $tgl_sekarang   = new DateTime(date('Y-m-d'));
-
-                        $selisih = $tgl_input_date->diff($tgl_sekarang)->days;
-
-                         // === ACTION CHECKBOX ===
-                        if ($val['status_approve'] == '0') {
-                          $action = "<input type='checkbox' class='checkItem' value='{$val['id']}'>";
-                          $status = "<span class='badge rounded-pill bg-danger'>Pending</span>";
-                        } else {
-                          $action = "";
-                          $status = "<span class='badge rounded-pill bg-primary'>Approved</span>";
-                        }
-
-                        echo "
-                        <tr>
-                          <td>".$action."</td>
-                          <td>".$val['no_bukti']."</td>
-                          <td>".$val['na_peg']."</td>
-                          <td>".$val['tgl_awal']." s.d ".$val['tgl_akhir']."</td>
-                          <td>".$val['lama']."</td>
-                          <td>".$val['keterangan']."</td>
-                          <td>".$status."</td>
-                        </tr>";
-                      }
-                    } else {
-                      echo "<tr><td colspan='7' class='text-center'>Data tidak ditemukan</td></tr>";
-                    }
-                  ?>
-                  </tbody>
-                </table>
+                <button class="btn btn-primary btn-sm" onclick="approveSelected()">
+                  <i class="bi bi-check2-square"></i> Approve Cuti
+                </button>
               </div>
+
+              <?php 
+                $param = [
+                  'no_peg'    => $Datapeg[0]->no_peg,
+                  'kd_unit'   => $Datapeg[0]->kd_unit,
+                  'kd_bagian' => $Datapeg[0]->kd_bagian,
+                  'kd_jab'    => $Datapeg[0]->kd_jab,
+                  'kd_level'  => $Datapeg[0]->kd_level
+                ];
+
+                $dataresultapp = $this->sdm_model->appcutipegawai($param);
+
+                if (!empty($dataresultapp)) {
+                  foreach ($dataresultapp as $val) {
+
+                    // STATUS & CHECKBOX
+                    if ($val['status_approve'] == '0') {
+                      $checkbox = "<input type='checkbox' class='form-check-input checkItem' value='{$val['id']}'>";
+                      $status   = "<span class='badge bg-danger'>Pending</span>";
+                    } else {
+                      $checkbox = "";
+                      $status   = "<span class='badge bg-primary'>Approved</span>";
+                    }
+              ?>
+
+              <div class="col-12 mb-3">
+                <div class="card shadow-sm border-0">
+                  <div class="card-body bg-light">
+
+                    <!-- HEADER -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <div>
+                        <?= $checkbox ?>
+                        <strong class="ms-1"><?= $val['na_peg'] ?></strong>
+                      </div>
+                      <?= $status ?>
+                    </div>
+
+                    <!-- TANGGAL -->
+                    <div class="small text-muted mb-2">
+                      <i class="bi bi-calendar-range"></i>
+                      <?= $val['tgl_awal'] ?> s.d <?= $val['tgl_akhir'] ?>
+                    </div>
+
+                    <!-- DETAIL -->
+                    <ul class="list-unstyled small mb-0">
+                      <li><b>No Bukti:</b> <?= $val['no_bukti'] ?></li>
+                      <li><b>Lama:</b> <?= $val['lama'] ?> hari</li>
+                      <li><b>Keterangan:</b> <?= $val['keterangan'] ?></li>
+                    </ul>
+
+                  </div>
+                </div>
+              </div>
+
+              <?php 
+                  }
+                } else {
+                  echo "<div class='text-center text-muted'>Data tidak ditemukan</div>";
+                }
+              ?>
+
             </div>
           </div>
+
       </div>
     </div>
   </div>
@@ -126,6 +127,17 @@
     });
 
 });
+
+let isAllSelected = false;
+
+function toggleSelectAll() {
+  const items = document.querySelectorAll('.checkItem');
+  isAllSelected = !isAllSelected;
+
+  items.forEach(item => {
+    item.checked = isAllSelected;
+  });
+}
 
 function approveSelected() {
     let ids = [];
@@ -172,45 +184,6 @@ function approveSelected() {
 }
 	
 
-function approvesppd(id_sppd) {
-  Swal.fire({
-      title: 'Menyetujui data sppd?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Ya, izinkan!',
-      cancelButtonText: 'Batal'
-  }).then((result) => {
-      if (result.isConfirmed) {
-          $.ajax({
-              url: "<?php echo base_url(); ?>index.php/approve/approve_sppd",
-              type: "POST",
-              data: { id_sppd: id_sppd },
-              dataType: "json",
-              success: function(res) {
-                  if (res.status === true) {
-                      Swal.fire({
-                          icon: 'success',
-                          title: 'Berhasil',
-                          text: 'Data berhasil disetujui',
-                          timer: 1500,
-                          showConfirmButton: false
-                      });
-                      // reload DataTable
-                      window.location.href='<?php echo base_url(); ?>index.php/approve/app_sppd';
-                      // $('#dataTable').DataTable().ajax.reload(null, false);
-                  } else {
-                      Swal.fire('Gagal', res.message ?? 'Gagal approve data', 'error');
-                  }
-              },
-              error: function() {
-                  Swal.fire('Error', 'Terjadi kesalahan server', 'error');
-              }
-          });
-      }
-  });
-}
 
 function kembali(){
    window.location.href='<?php echo base_url(); ?>index.php/sdm/pageapprove';

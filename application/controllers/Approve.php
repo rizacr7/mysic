@@ -600,6 +600,7 @@ class Approve extends CI_Controller {
 	{
 		// ambil user login
 		$username = $this->session->userdata('username');
+		// $username = "KW98051";
 		$ids = $this->input->post('ids');
 
 		if (empty($ids) || !is_array($ids)) {
