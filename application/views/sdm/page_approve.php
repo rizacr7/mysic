@@ -98,6 +98,24 @@
         View Approve Mutasi & Promosi Pegawai
         <i class="bi bi-arrow-right"></i>
       </a>
+
+      <div class="affan-element-item">
+        <div class="element-heading-wrapper">
+          <i class="bi bi-person-bounding-box"></i>
+          <div class="heading-text">
+            <h6 class="mb-1">Pengajuan Pegawai Baru</h6>
+          </div>
+        </div>
+      </div>
+
+      <a class="affan-element-item" href="<?php echo base_url('index.php/approve/app_request'); ?>">
+        Approve Request Pegawai Baru
+        <i class="bi bi-arrow-right"></i>
+      </a>
+      <a class="affan-element-item" href="<?php echo base_url('index.php/approve/view_app_request'); ?>">
+        View Approve Request Pegawai
+        <i class="bi bi-arrow-right"></i>
+      </a>
       
   </div>
 </div>

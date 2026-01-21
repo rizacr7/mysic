@@ -99,6 +99,61 @@ class Approve extends CI_Controller {
 		$this->load->view('general/footer');	
 	}
 
+	public function app_request()
+	{
+		$no_peg = $this->session->userdata('username');
+		$jab = $this->session->userdata('jab');
+		// $jab = "KADIV";
+		// $no_peg = "KW00025";
+
+		$Datapeg = $this->m_login->profilepegawai($no_peg);
+		$Param  = array();
+		$Param['Datapeg']= $Datapeg;
+
+		$this->load->view('general/header');	
+		$this->load->view('general/sidebar');	
+		
+		if($jab == "KADIV" || $jab == "MR" || $jab == "PENGURUS"){
+			if($jab == "MR" && $Datapeg[0]->kd_unit != "90C0"){
+				$this->load->view('approve/data_app_request_unit',$Param);
+			}
+			else if($jab == "KADIV"){
+				$this->load->view('approve/data_app_request_unit',$Param);
+			}
+			else{
+				$this->load->view('approve/data_app_request',$Param);	
+			}
+		}
+		else{
+			$this->load->view('not_found',$Param);
+		}
+		
+		$this->load->view('general/footer');	
+	}
+
+	public function view_app_request()
+	{
+		$no_peg = $this->session->userdata('username');
+		$jab = $this->session->userdata('jab');
+		// $jab="KADIV";
+		// $no_peg = "KW00025";
+
+		$Datapeg = $this->m_login->profilepegawai($no_peg);
+		$Param  = array();
+		$Param['Datapeg']= $Datapeg;
+
+		$this->load->view('general/header');	
+		$this->load->view('general/sidebar');	
+		if($jab == "KADIV" || $jab == "MR" || $jab == "PENGURUS"){
+			$this->load->view('approve/view_app_request',$Param);	
+		}
+		else{
+			$this->load->view('not_found',$Param);
+		}
+		
+		$this->load->view('general/footer');	
+	}
+
 	public function view_app_mutasi()
 	{
 		$no_peg = $this->session->userdata('username');
@@ -944,4 +999,261 @@ class Approve extends CI_Controller {
 		]);
 	}
 
+	function save_signature(){
+		$username = $this->session->userdata('username');
+		header('Content-Type: application/json');
+		$today = date("Y-m-d");
+
+		$raw = file_get_contents("php://input");
+		$data = json_decode($raw, true);
+
+		// fallback jika JSON kosong
+		if (!$data) {
+			$data = $this->input->post();
+		}
+
+		// GANTI bagian ini (hapus tanda ??)
+		$id_request = isset($data['id_request']) ? $data['id_request'] : '';
+		$image      = isset($data['image']) ? $data['image'] : '';
+
+		if ($id_request == '' || $image == '') {
+			echo json_encode(array('success' => false, 'error' => 'Data tidak lengkap'));
+			return;
+		}
+
+		if (!preg_match('/^data:image\/png;base64,/', $image)) {
+			echo json_encode(array('success' => false, 'error' => 'Format gambar salah'));
+			return;
+		}
+
+		//---cek status pengajuan---
+		$queryCek = "SELECT a.*,c.`kd_divisi` FROM db_hrd.t_request_pegawai a 
+		LEFT JOIN db_hrd.`m_unit` b ON a.`kd_unit` = b.`kd_unit`
+		LEFT JOIN db_hrd.`m_bagian` c ON b.`kd_bagian` = c.`kd_bagian`
+		WHERE a.id_req = '$id_request'";
+		$value = $this->db_hrdonline->query($queryCek)->result();
+		$flag_app_unit = $value[0]->flag_app_unit;
+		$flag_app_sdm = $value[0]->flag_app_sdm;
+		$flag_app_kadiv = $value[0]->flag_app_kadiv;
+		$kd_divisi = $value[0]->kd_divisi;
+
+		if($flag_app_unit == 0 && $flag_app_sdm == 0 && $flag_app_kadiv == 0){
+			$ttd = $id_request."mr";
+			$jenisttd = "signmr";
+		}
+		else{
+			if($flag_app_sdm == 0 && $flag_app_unit == 1 && $flag_app_kadiv == 0){
+				$ttd = $id_request."hr";
+				$jenisttd = "signhr";
+			}
+			else{
+				if($flag_app_kadiv == 0){
+					$ttd = $id_request."kadiv";
+					$jenisttd = "signkadiv";
+				}
+			}
+		}
+
+		$base64 = substr($image, strpos($image, ',') + 1);
+		$decoded = base64_decode($base64);
+		if (!$decoded) {
+			echo json_encode(array('success' => false, 'error' => 'Gagal decode base64'));
+			return;
+		}
+
+		// buat folder uploads/signatures/
+		$dir = FCPATH . 'uploads/signature/';
+		if (!is_dir($dir)) mkdir($dir, 0755, true);
+		$filename = 'ttd_' . $ttd . '_' . date('Ymd_His') . '.png';
+		$final_file_path = $dir . $filename;
+
+		if (!file_put_contents($final_file_path, $decoded)) {
+			echo json_encode(array('success' => false, 'error' => 'Gagal menyimpan file'));
+			return;
+		}
+
+		// $final_file_path = 'ttd_' . $id_request . '_' . date('Ymd_His') . '.png';
+
+		// === Kirim file ke SIPANDU ===
+		$cfile = new CURLFile($final_file_path, mime_content_type($final_file_path), basename($final_file_path));
+		$curl  = curl_init();
+
+		curl_setopt_array($curl, [
+			CURLOPT_URL            => 'https://sipandu.kwsg.co.id/upload/do_upload_signature',
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_TIMEOUT        => 60,
+			CURLOPT_POST           => true,
+			CURLOPT_POSTFIELDS     => [
+				'userfile'     => $cfile,
+				'kd_pengajuan' => $id_request,
+				'jenis'        => $jenisttd,
+			],
+			CURLOPT_HTTPHEADER     => [
+				'Authorization: jKwYn8kknmd21HzHhGfT',
+			],
+		]);
+
+		$response = curl_exec($curl);
+
+		if (curl_errno($curl)) {
+			throw new Exception('CURL ERROR: ' . curl_error($curl));
+		}
+
+		$http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		curl_close($curl);
+
+		log_message('debug', "Response SIPANDU (HTTP {$http_code}): " . $response);
+		// -- end of kirim file ---
+
+		// contoh update ke database (opsional)
+		if($flag_app_unit == 0 && $flag_app_sdm == 0 && $flag_app_kadiv == 0){
+			$updatequery = "Update db_hrd.t_request_pegawai set flag_app_unit = 1,tgl_app_unit='$today',user_app_unit='$username',file_app_unit='$response' where id_req = '$id_request'";
+		}
+		else{
+			if($flag_app_sdm == 0 && $flag_app_unit == 1 && $flag_app_kadiv == 0){
+				if($kd_divisi == ""){
+					$updatequery = "Update db_hrd.t_request_pegawai set flag_app_sdm = 1,tgl_app_sdm='$today',user_app_sdm='$username',file_app_sdm='$response',flag_app_kadiv = 1,tgl_app_kadiv='$today' where id_req = '$id_request' and flag_app_unit = 1";
+
+					$query = "SELECT a.*,b.nm_unit FROM db_hrd.t_request_pegawai a 
+					LEFT JOIN db_hrd.m_unit b ON a.kd_unit = b.kd_unit WHERE a.id_req = '$id_request'";
+					$val = $this->db_hrdonline->query($query)->result();
+
+					$jns_bm = "PENGAJUAN PEGAWAI";
+					$keterangan_bm = $val[0]->nm_unit." (".$val[0]->job_desc." )";
+
+					//---insert broadcast ----
+					$data = array(
+						"jns_bm" => $jns_bm,
+						"message" => $keterangan_bm
+					);
+					$this->db_hrdonline->insert("db_hrd.broadcast",$data);
+				}
+				else{
+					$updatequery = "Update db_hrd.t_request_pegawai set flag_app_sdm = 1,tgl_app_sdm='$today',user_app_sdm='$username',file_app_sdm='$response' where id_req = '$id_request' and flag_app_unit = 1";
+				}
+			}
+			else{
+				if($flag_app_kadiv == 0){
+					$updatequery = "Update db_hrd.t_request_pegawai set flag_app_kadiv = 1,tgl_app_kadiv='$today',user_app_kadiv='$username',file_app_kadiv='$response' where id_req = '$id_request' and flag_app_sdm = 1";
+
+					// $param = array();
+					// $param['id_request'] = $id_request;
+					// $databroadcast = $this->sdm_model->get_broadcast_request($param);
+
+					$query = "SELECT a.*,b.nm_unit FROM db_hrd.t_request_pegawai a 
+					LEFT JOIN db_hrd.m_unit b ON a.kd_unit = b.kd_unit WHERE a.id_req = '$id_request'";
+					$val = $this->db_hrdonline->query($query)->result();
+
+					$jns_bm = "PENGAJUAN PEGAWAI";
+					$keterangan_bm = $val[0]->nm_unit." (".$val[0]->job_desc." )";
+
+					//---insert broadcast ----
+					$data = array(
+						"jns_bm" => $jns_bm,
+						"message" => $keterangan_bm
+					);
+					$this->db_hrdonline->insert("db_hrd.broadcast",$data);
+				}
+			}
+		}
+		
+		$this->db_hrdonline->query($updatequery);
+
+		echo json_encode(array(
+			'success' => true,
+			'file' => base_url('uploads/signature/' . $filename),
+			'message' => 'Tanda tangan tersimpan'
+		));
+	}
+
+	function approve_multi_request(){
+		// ambil user login
+		$username = $this->session->userdata('username');
+		$jab = $this->session->userdata('jab');
+		// sementara (debug)
+		// $username = "KW98051";
+
+		$ids = $this->input->post('ids');
+
+		if (empty($ids) || !is_array($ids)) {
+			echo json_encode(['status' => false, 'message' => 'Data kosong']);
+			return;
+		}
+
+		// === DATA USER APPROVER ===
+		$rdt = $this->db
+			->where('no_peg', $username)
+			->get('mas_peg')
+			->row();
+
+		if (!$rdt) {
+			echo json_encode(['status' => false, 'message' => 'User tidak valid']);
+			return;
+		}
+
+		$kd_jab   = $rdt->kd_jab;
+		$kd_level = $rdt->kd_level;
+		$kd_unit  = $rdt->kd_unit;
+
+		$approved = [];
+		$rejected = [];
+
+		foreach ($ids as $id_req) {
+
+			$bolehApprove = false;
+
+			// ===== LOGIKA APPROVE (ASLI, DISAMAKAN) =====
+			if($jab == "MR" || $jab == "PENGURUS"){
+				$bolehApprove = true;
+			}
+			// ===== EKSEKUSI UPDATE =====
+			if ($bolehApprove) {
+				if($kd_jab == "02" && $jab == "PENGURUS"){ 
+					$this->db->where('id_req', $id_req)
+						->update('t_request', [
+							'flag_app_sekrtrs'  => 1,
+							'user_app_sekrtrs' => $username,
+							'tgl_app_sekrtrs'  => date('Y-m-d H:i:s')
+						]);
+				}
+				else if($kd_jab == "04" && $jab == "PENGURUS"){ 
+					$this->db->where('id_req', $id_req)
+						->update('t_request', [
+							'flag_app_bendahara'  => 1,
+							'user_app_bendahara' => $username,
+							'tgl_app_bendahara'  => date('Y-m-d H:i:s')
+						]);
+				}
+				else if($kd_jab == "01" && $jab == "PENGURUS"){ 
+					$this->db->where('id_req', $id_req)
+						->update('t_request', [
+							'flag_app_ketua'  => 1,
+							'user_app_ketua' => $username,
+							'tgl_app_ketua'  => date('Y-m-d H:i:s')
+						]);
+				}
+				else{
+					$this->db->where('id_req', $id_req)
+					->update('t_request', [
+						'flag_app_sdm'  => 1,
+						'user_app_sdm' => $username,
+						'tgl_app_sdm'  => date('Y-m-d H:i:s')
+					]);
+				}
+				$approved[] = $id_req;
+			} else {
+				$rejected[] = $id_req;
+			}
+		}
+
+		echo json_encode([
+			'status'    => true,
+			'approved'  => count($approved),
+			'rejected'  => count($rejected),
+			'detail'    => [
+				'approved_ids' => $approved,
+				'rejected_ids' => $rejected
+			]
+		]);
+	}
 }

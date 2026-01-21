@@ -858,5 +858,91 @@ class Sdm_model extends CI_Model{
 		$result = $this->db_hrdonline->query($query)->result_array();
 		return $result; 
 	}
+
+	function app_request_unit($data){
+		$status_user = $this->session->userdata('jab');
+		// $status_user = "KADIV";
+		$no_peg = $data['no_peg'];
+		$kd_unit = $data['kd_unit'];
+		$kd_jab = $data['kd_jab'];
+		$kd_level = $data['kd_level'];
+
+		$whereapp = " AND a.`flag_app_unit` = 0";
+
+		if($status_user == "MR"){
+			if($kd_unit == "90C0"){
+				//---khusus sdm---
+				$whereapp = " AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 0 ";
+			}
+			else{
+				$whereapp = " AND c.`kd_bagian` = '".$kd_unit."' and a.`flag_app_unit` = 0 ";
+			}
+		}
+		else if($status_user == "KADIV"){
+			$whereapp = " AND c.kd_divisi= '".$kd_unit."' AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 1 AND a.`flag_app_kadiv` = 0 ";
+		}
+		else if($status_user == "PENGURUS"){
+			if($kd_jab == "01"){
+				$whereapp = " AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 1 AND a.`flag_app_kadiv` = 1 AND a.`flag_app_ketua` = 0 ";
+			}
+			else if($kd_jab == "02"){
+				$whereapp = " AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 1 AND a.`flag_app_kadiv` = 1 AND a.`flag_app_sekrtrs` = 0 ";
+			}
+			else if($kd_jab == "04"){
+				$whereapp = " AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 1 AND a.`flag_app_kadiv` = 1 AND a.`flag_app_bendahara` = 0 ";
+			}
+		}
+
+		$query = "SELECT a.*,b.`nm_unit`,c.`nm_bagian` FROM t_request_pegawai a 
+		LEFT JOIN m_unit b ON a.`kd_unit` = b.`kd_unit`
+		LEFT JOIN m_bagian c ON b.`kd_bagian` = c.`kd_bagian`
+		WHERE a.is_del = 0 $whereapp ORDER BY a.tanggal DESC;";
+		
+		$result = $this->db_hrdonline->query($query)->result_array();
+		return $result; 
+	}
+
+	function viewapprequestpegawai($data){
+		$status_user = $this->session->userdata('jab');
+		// $status_user = "KADIV";
+		$no_peg = $data['no_peg'];
+		$kd_unit = $data['kd_unit'];
+		$kd_jab = $data['kd_jab'];
+		$kd_level = $data['kd_level'];
+
+		$whereapp = " AND a.`flag_app_unit` = 1";
+
+		if($status_user == "MR"){
+			if($kd_unit == "90C0"){
+				//---khusus sdm---
+				$whereapp = " AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 1 ";
+			}
+			else{
+				$whereapp = " AND c.`kd_bagian` = '".$kd_unit."' and a.`flag_app_unit` = 1 ";
+			}
+		}
+		else if($status_user == "KADIV"){
+			$whereapp = " AND c.kd_divisi= '".$kd_unit."' AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 1 AND a.`flag_app_kadiv` = 1 ";
+		}
+		else if($status_user == "PENGURUS"){
+			if($kd_jab == "01"){
+				$whereapp = " AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 1 AND a.`flag_app_kadiv` = 1 AND a.`flag_app_ketua` = 1 ";
+			}
+			else if($kd_jab == "02"){
+				$whereapp = " AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 1 AND a.`flag_app_kadiv` = 1 AND a.`flag_app_sekrtrs` = 1 ";
+			}
+			else if($kd_jab == "04"){
+				$whereapp = " AND a.`flag_app_unit` = 1 AND a.flag_app_sdm = 1 AND a.`flag_app_kadiv` = 1 AND a.`flag_app_bendahara` = 1 ";
+			}
+		}
+		
+		$query = "SELECT a.*,b.`nm_unit`,c.`nm_bagian` FROM t_request_pegawai a 
+		LEFT JOIN m_unit b ON a.`kd_unit` = b.`kd_unit`
+		LEFT JOIN m_bagian c ON b.`kd_bagian` = c.`kd_bagian`
+		WHERE a.is_del = 0 $whereapp ORDER BY a.tanggal DESC LIMIT 30;";
+		
+		$result = $this->db_hrdonline->query($query)->result_array();
+		return $result; 
+	}
 }
 ?>
