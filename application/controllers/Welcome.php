@@ -34,7 +34,11 @@ class Welcome extends CI_Controller {
 	function proses_login() {
         $usr = $this->input->post('username');
 		$psw = $this->input->post('password');
-		
+
+		if($usr == "" || $psw == ""){
+			$this->session->set_flashdata('result_login', '<br>Username atau Password tidak boleh kosong.');
+			redirect();
+		}
 		//$p = md5(mysql_escape_string($psw));
 		$cek = $this->m_login->masuk($usr, $psw);
 		if ($cek->num_rows() > 0) {
