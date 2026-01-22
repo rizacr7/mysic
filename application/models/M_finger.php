@@ -31,8 +31,8 @@ class M_finger extends CI_Model{
         $query_limit = ($limit) ? " limit " . $offset . ", " . $limit : "";
 		
 		
-		$query = "select " . $query_select . " FROM t_finger_mobile_dummy a 
-		left join mas_peg_backup b on a.no_peg = b.no_peg
+		$query = "select " . $query_select . " FROM t_finger_mobile a 
+		left join mas_peg b on a.no_peg = b.no_peg
 		where a.no_peg = '$username' and month(a.tanggal) = '$bulan' and year(a.tanggal) = $tahun
 		" . $query_where . " " . $query_sort . " " . $query_limit;
 		
@@ -52,13 +52,13 @@ class M_finger extends CI_Model{
 			LEFT JOIN m_kantor b ON a.kd_kantor = b.kd_kantor 
 			WHERE a.no_peg = '$username'
 			UNION
-			SELECT b.kd_kantor,c.nm_kantor FROM mas_peg_backup a 
+			SELECT b.kd_kantor,c.nm_kantor FROM mas_peg a 
 			LEFT JOIN m_unit b ON a.kd_unit = b.kd_unit
 			LEFT JOIN m_kantor c ON b.kd_kantor = c.kd_kantor
 			WHERE a.no_peg = '$username') m GROUP BY m.kd_kantor";
 		}
 		else{
-			$sql = "SELECT b.kd_kantor,c.nm_kantor FROM mas_peg_backup a 
+			$sql = "SELECT b.kd_kantor,c.nm_kantor FROM mas_peg a 
 			LEFT JOIN m_unit b ON a.kd_unit = b.kd_unit
 			LEFT JOIN m_kantor c ON b.kd_kantor = c.kd_kantor
 			WHERE a.no_peg = '$username'";
