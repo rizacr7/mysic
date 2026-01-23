@@ -163,7 +163,7 @@ class Absen extends CI_Controller {
 		$rdt = $this->db_hrdonline->query($cekdt)->result();
 		$dt_finger = $rdt[0]->dt_finger;
 		if($dt_finger == 0){
-			if($kd_job == "N12" || $kd_job == "B18" || $kd_kantor == "K0075"){
+			if($kd_job == "N12" || $kd_job == "B18" || $kd_job== "D42" || $kd_job == "C24" || $kd_job == "N11" || $kd_kantor == "K0075"){
 				//---khusus satpam dan expedisi cargo---
 				// --- insert t_finger_mobile ---
 				$cekdevice = "SELECT COUNT(*) as jml_device from t_finger_mobile WHERE tanggal='$tgl_now' and device_id = '".$device_id."' and fingerjs='$fingerprint'";
@@ -364,7 +364,7 @@ class Absen extends CI_Controller {
 		// Validasi Kemiripan
 		// =======================
 	
-		if($kd_job == "N12" || $kd_job == "B18" || $kd_kantor == "K0075"){
+		if($kd_job == "N12" || $kd_job == "B18" || $kd_job== "D42" || $kd_job == "C24" || $kd_job == "N11" || $kd_kantor == "K0075"){
 			//---khusus satpam dan expedisi cargo---
 			$cekdt = "select * from t_finger_mobile where no_peg = '$username' and tanggal='$tgl_now'";
 			$rows = $this->db_hrdonline->query($cek)->num_rows();
