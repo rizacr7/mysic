@@ -177,7 +177,7 @@ class Absen extends CI_Controller {
 					exit;
 				}
 				else{
-					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint'";
+					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1";
 					$this->db_hrdonline->query($insert);
 
 					echo json_encode([
@@ -227,7 +227,7 @@ class Absen extends CI_Controller {
 					}
 					else{
 						// --- insert t_finger_mobile ---
-						$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',shift_time_in='$jam_masuk',shift_time_out='$jam_pulang',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint'";
+						$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',shift_time_in='$jam_masuk',shift_time_out='$jam_pulang',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1";
 						$this->db_hrdonline->query($insert);
 
 						echo json_encode([
