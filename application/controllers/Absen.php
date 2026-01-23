@@ -63,11 +63,18 @@ class Absen extends CI_Controller {
 			exit;
 		}
 
-		$device_id = $input['device_id'];
-		$fingerprint = $input['fingerprint'];
-		$latitude    = $input['latitude'];
-		$longitude   = $input['longitude'];
-		$kd_kantor   = $input['kd_kantor'];
+		// $device_id = $input['device_id'];
+		// $fingerprint = $input['fingerprint'];
+		// $latitude    = $input['latitude'];
+		// $longitude   = $input['longitude'];
+		// $kd_kantor   = $input['kd_kantor'];
+
+		$device_id   = $input['device_id']   ?? '';
+		$fingerprint = $input['fingerprint'] ?? '';
+		$latitude    = $input['latitude']    ?? '';
+		$longitude   = $input['longitude']   ?? '';
+		$kd_kantor   = $input['kd_kantor']   ?? '';
+
 		$lat_lon_in = $latitude.",".$longitude;
 		$proyekcurah = 0;
 		$cekjarak = 1;
@@ -252,6 +259,7 @@ class Absen extends CI_Controller {
 
 	public function proses_checkout()
 	{
+	
 		header('Content-Type: application/json');  
 		date_default_timezone_set('Asia/Jakarta');
 		
@@ -275,11 +283,18 @@ class Absen extends CI_Controller {
 			exit;
 		}
 
-		$device_id = $input['device_id'];
-		$fingerprint = $input['fingerprint'];
-		$latitude    = $input['latitude'];
-		$longitude   = $input['longitude'];
-		$kd_kantor   = $input['kd_kantor'];
+		// $device_id = $input['device_id'];
+		// $fingerprint = $input['fingerprint'];
+		// $latitude    = $input['latitude'];
+		// $longitude   = $input['longitude'];
+		// $kd_kantor   = $input['kd_kantor'];
+
+		$device_id   = $input['device_id']   ?? '';
+		$fingerprint = $input['fingerprint'] ?? '';
+		$latitude    = $input['latitude']    ?? '';
+		$longitude   = $input['longitude']   ?? '';
+		$kd_kantor   = $input['kd_kantor']   ?? '';
+
 		$lat_lon_out = $latitude.",".$longitude;
 		$cekjarak = 1;
 		$proyekcurah=0;
