@@ -138,8 +138,7 @@ class Welcome extends CI_Controller {
 			redirect('Welcome/index');
 		}
 		else{
-
-			if($this->session->userdata('username') == "KW16004" || $this->session->userdata('username') == "KW21012"){
+			if($this->session->userdata('username') == "KW16004" || $this->session->userdata('username') == "KW21012" || $this->session->userdata('username') == "KW96155" || $this->session->userdata('username') == "KW13005"){
 				$this->load->view('general/header');	
 				$this->load->view('general/sidebar');	
 				$this->load->view('home_undian',$data);	
