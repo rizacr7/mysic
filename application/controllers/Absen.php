@@ -383,7 +383,7 @@ class Absen extends CI_Controller {
 		if($kd_job == "N12" || $kd_job == "B18" || $kd_job == "D42" || $kd_job == "C24" || $kd_job == "N11" || $kd_kantor == "K0075"){
 			//---khusus satpam dan expedisi cargo---
 			$cekdt = "select * from t_finger_mobile where no_peg = '$username' and tanggal='$tgl_now'";
-			$rows = $this->db_hrdonline->query($cek)->num_rows();
+			$rows = $this->db_hrdonline->query($cekdt)->num_rows();
 			if($rows == 1){
 				$update = "update t_finger_mobile set keluar='$checkout',ip_address_out='$ipaddress',lat_lon_out='$lat_lon_out',device_id_out='".$device_id."',
 				fingerjs_out='$fingerprint' where no_peg = '$username' and tanggal='$tgl_now'";
@@ -398,7 +398,7 @@ class Absen extends CI_Controller {
 			else{
 				$tgl_sebelumnya = date('Y-m-d', strtotime($tgl_now . ' -1 day'));
 				$cekdt = "select * from t_finger_mobile where no_peg = '$username' and tanggal='$tgl_sebelumnya'";
-				$rows = $this->db_hrdonline->query($cek)->num_rows();
+				$rows = $this->db_hrdonline->query($cekdt)->num_rows();
 				if($rows == 1){
 					$val = $this->db->query($cekdt)->result();
 					$keluar = $val[0]->keluar;
