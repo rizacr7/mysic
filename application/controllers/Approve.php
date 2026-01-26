@@ -1228,7 +1228,7 @@ class Approve extends CI_Controller {
 			if ($bolehApprove) {
 				if($kd_jab == "02" && $jab == "PENGURUS"){ 
 					$this->db->where('id_req', $id_req)
-						->update('t_request', [
+						->update('t_request_pegawai', [
 							'flag_app_sekrtrs'  => 1,
 							'user_app_sekrtrs' => $username,
 							'tgl_app_sekrtrs'  => date('Y-m-d H:i:s')
@@ -1236,7 +1236,7 @@ class Approve extends CI_Controller {
 				}
 				else if($kd_jab == "04" && $jab == "PENGURUS"){ 
 					$this->db->where('id_req', $id_req)
-						->update('t_request', [
+						->update('t_request_pegawai', [
 							'flag_app_bendahara'  => 1,
 							'user_app_bendahara' => $username,
 							'tgl_app_bendahara'  => date('Y-m-d H:i:s')
@@ -1244,7 +1244,7 @@ class Approve extends CI_Controller {
 				}
 				else if($kd_jab == "01" && $jab == "PENGURUS"){ 
 					$this->db->where('id_req', $id_req)
-						->update('t_request', [
+						->update('t_request_pegawai', [
 							'flag_app_ketua'  => 1,
 							'user_app_ketua' => $username,
 							'tgl_app_ketua'  => date('Y-m-d H:i:s')
@@ -1252,7 +1252,7 @@ class Approve extends CI_Controller {
 				}
 				else{
 					$this->db->where('id_req', $id_req)
-					->update('t_request', [
+					->update('t_request_pegawai', [
 						'flag_app_sdm'  => 1,
 						'user_app_sdm' => $username,
 						'tgl_app_sdm'  => date('Y-m-d H:i:s')
