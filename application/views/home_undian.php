@@ -82,11 +82,11 @@
           <div class="col-12 col-sm-12 col-lg-12">
         
          
-          <div class="card card-bg-img bg-img bg-overlay" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/3.jpg')">
-            <div class="card-body p-4 direction-rtl">
-              <h6 class="text-white display-3 mb-4 fw-semibold">Undangan Gathering SIC Ke-62</h6>
-              <a class="btn btn-warning" onclick="undangansic()">Generate QR Code</a>
+          <div class="card card-bg-img bg-img" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/undangangathering.jpeg')">
+            <div class="card-body p-4 direction-rtl" style="height: 220px;">
+              <h6 class="display-3 mb-4 fw-semibold"></h6>
             </div>
+            <a class="btn btn-danger" onclick="undangansic()">Generate QR Code</a>
           </div>
           
             <!--<div class="card single-product-card" style="background-color:#34A6F4">-->
