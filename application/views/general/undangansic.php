@@ -21,7 +21,7 @@
           <p class="text-muted">Tunjukkan QR Code ini saat masuk ke Gedung Wisma</p>
           <?php } else {?>
           
-          <h4>Anda sudah check-in <br> <?php echo $nama?></h4>
+          <h4>Selamat Datang <br> <?php echo $nama?></h4>
           <div id="qrcode" class="my-3"></div>
           <?php } ?>
           <div class="mt-4">
