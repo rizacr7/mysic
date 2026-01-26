@@ -692,7 +692,7 @@ class Sdm_model extends CI_Model{
 		LEFT JOIN m_unit c ON a.UNIT = c.kd_unit
 		LEFT JOIN m_bagian d ON c.kd_bagian = d.kd_bagian
 		LEFT JOIN t_sppd e ON a.BUKTI = e.BUKTI
-		where a.APPROVE_ATASAN =1 and a.HAPUS = 0 ".$whereunit."  AND a.TGL_APP >= DATE_FORMAT(
+		where a.APPROVE_ATASAN =1 and a.HAPUS = 0 ".$whereunit."  AND a.TGL_PJK >= DATE_FORMAT(
 			DATE_SUB(CURDATE(), INTERVAL 4 MONTH),
 			'%Y-%m-01'
 		) order by a.AWAL_TUGAS desc;";
