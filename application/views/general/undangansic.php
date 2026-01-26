@@ -7,21 +7,22 @@
       <div class="card">
         <div class="card-body px-5 text-center">
           <?php 
+            $querypeserta = "SELECT * FROM peserta WHERE no_peg = '".$this->session->userdata('username')."'";
+            $data = $this->db_undian->query($querypeserta)->result();
+            $nama = $data[0]->nama;
+            $no_peg = $data[0]->no_peg;
+
             $queryhadiah = "SELECT * FROM peserta WHERE no_peg = '".$this->session->userdata('username')."' and is_checkin = 0";
             $rdt = $this->db_undian->query($queryhadiah)->num_rows();
             if($rdt != 0){
-                $data = $this->db_undian->query($queryhadiah)->result();
-                $nama = $data[0]->nama;
-                $no_peg = $data[0]->no_peg;
-               
           ?>
           <h4>Selamat Datang <br> <?php echo $nama?></h4>
-
           <div id="qrcode" class="my-3"></div>
           <p class="text-muted">Tunjukkan QR Code ini saat masuk ke Gedung Wisma</p>
           <?php } else {?>
           
-          <h4>Anda sudah melakukan check-in</h4>
+          <h4>Anda sudah check-in <br> <?php echo $nama?></h4>
+          <div id="qrcode" class="my-3"></div>
           <?php } ?>
           <div class="mt-4">
           <a class="btn btn-creative btn-danger" href="<?php echo base_url('index.php/welcome/sukses'); ?>">Go to Home</a>
