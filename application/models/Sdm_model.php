@@ -792,7 +792,14 @@ class Sdm_model extends CI_Model{
             }
         }
         else if($status_user == "MR"){
-            $whereapp = "AND a.flag_app_sdm = 1 AND a.flag_app_kadiv=0 AND (f.kd_bagian = '$kd_unit' OR h.kd_bagian='$kd_unit')";
+			if($kd_unit == "90C0"){
+				//---khusus sdm---
+				$whereapp = "AND a.flag_app_sdm = 0 AND flag_app_unit = 0";
+			}
+			else{
+				$whereapp = "AND a.flag_app_sdm = 1 AND a.flag_app_kadiv=0 AND (f.kd_bagian = '$kd_unit' OR h.kd_bagian='$kd_unit')";
+			}
+           
         }
 
 		$query = "SELECT a.*,b.na_peg,c.nm_job,d.nm_jab FROM db_hrd.t_pengajuan_mutasi a 
@@ -843,7 +850,14 @@ class Sdm_model extends CI_Model{
             }
         }
         else if($status_user == "MR"){
-            $whereapp = "AND a.flag_app_sdm = 1 AND flag_app_unit = 1 AND (f.kd_bagian = '$kd_unit' OR h.kd_bagian='$kd_unit')";
+			if($kd_unit == "90C0"){
+				//---khusus sdm---
+				$whereapp = "AND a.flag_app_sdm = 1";
+			}
+			else{
+				$whereapp = "AND a.flag_app_sdm = 1 AND flag_app_unit = 1 AND (f.kd_bagian = '$kd_unit' OR h.kd_bagian='$kd_unit')";
+			}
+           
         }
 
 		$query = "SELECT a.*,b.na_peg,c.nm_job,d.nm_jab FROM db_hrd.t_pengajuan_mutasi a 

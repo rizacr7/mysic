@@ -900,32 +900,50 @@ class Approve extends CI_Controller {
 			// ===== EKSEKUSI UPDATE =====
 			if ($bolehApprove) {
 				if($jab == "MR"){
-					$qmutasi = "SELECT a.*,b.na_peg,c.nm_job,d.nm_jab,f.kd_bagian AS bagianasal,h.kd_bagian AS bagiantujuan FROM db_hrd.t_pengajuan_mutasi a 
-					LEFT JOIN db_hrd.mas_peg b ON a.`no_peg` = b.`no_peg` 
-					LEFT JOIN db_hrd.m_jobdesc c ON a.kd_job = c.kd_job
-					LEFT JOIN db_hrd.m_jabatan d ON a.kd_jab = d.kd_jab
-					LEFT JOIN db_hrd.m_unit e ON a.kd_unit_asal = e.kd_unit
-					LEFT JOIN db_hrd.m_bagian f ON e.kd_bagian = f.kd_bagian
-					LEFT JOIN db_hrd.m_unit g ON a.`kd_unit_tujuan` =  g.`kd_unit`
-					LEFT JOIN db_hrd.m_bagian h ON g.kd_bagian = h.kd_bagian
-					WHERE a.is_del = 0 AND a.flag_app_sdm = 1 AND a.flag_app_kadiv=0 a.id_mutasi = '$id_mutasi'";
+					if($kd_unit == "90C0"){
+						$qmutasi = "SELECT a.*,b.na_peg,c.nm_job,d.nm_jab,f.kd_bagian AS bagianasal,h.kd_bagian AS bagiantujuan FROM db_hrd.t_pengajuan_mutasi a 
+						LEFT JOIN db_hrd.mas_peg b ON a.`no_peg` = b.`no_peg` 
+						LEFT JOIN db_hrd.m_jobdesc c ON a.kd_job = c.kd_job
+						LEFT JOIN db_hrd.m_jabatan d ON a.kd_jab = d.kd_jab
+						LEFT JOIN db_hrd.m_unit e ON a.kd_unit_asal = e.kd_unit
+						LEFT JOIN db_hrd.m_bagian f ON e.kd_bagian = f.kd_bagian
+						LEFT JOIN db_hrd.m_unit g ON a.`kd_unit_tujuan` =  g.`kd_unit`
+						LEFT JOIN db_hrd.m_bagian h ON g.kd_bagian = h.kd_bagian
+						WHERE a.is_del = 0 AND a.flag_app_sdm = 0 and a.id_mutasi = '$id_mutasi'";
+						$val = $this->db->query($qmutasi)->result();
 
-					$val = $this->db->query($qmutasi)->result();
-					$bagianasal = $val[0]->bagianasal;
-					$bagiantujuan = $val[0]->bagiantujuan;
-
-					if($bagianasal == $bagiantujuan){
-						$update = "update db_hrd.t_pengajuan_mutasi set flag_app_unit=1,tgl_app_unit='$today',user_app_unit='$username',flag_app_tujuan=1,tgl_app_tujuan='$today',user_app_tujuan='$username' where id_mutasi = '$id_mutasi'";
+						$update = "update db_hrd.t_pengajuan_mutasi set flag_app_sdm=1,tgl_app_sdm='$today',user_app_sdm='$username' where id_mutasi = '$id_mutasi'";
 						$result = $this->db->query($update);
 					}
 					else{
-						if($bagianasal == $kd_unit){
-							$update = "update db_hrd.t_pengajuan_mutasi set flag_app_unit=1,tgl_app_unit='$today',user_app_unit='$username' where id_mutasi = '$id_mutasi'";
+
+						$qmutasi = "SELECT a.*,b.na_peg,c.nm_job,d.nm_jab,f.kd_bagian AS bagianasal,h.kd_bagian AS bagiantujuan FROM db_hrd.t_pengajuan_mutasi a 
+						LEFT JOIN db_hrd.mas_peg b ON a.`no_peg` = b.`no_peg` 
+						LEFT JOIN db_hrd.m_jobdesc c ON a.kd_job = c.kd_job
+						LEFT JOIN db_hrd.m_jabatan d ON a.kd_jab = d.kd_jab
+						LEFT JOIN db_hrd.m_unit e ON a.kd_unit_asal = e.kd_unit
+						LEFT JOIN db_hrd.m_bagian f ON e.kd_bagian = f.kd_bagian
+						LEFT JOIN db_hrd.m_unit g ON a.`kd_unit_tujuan` =  g.`kd_unit`
+						LEFT JOIN db_hrd.m_bagian h ON g.kd_bagian = h.kd_bagian
+						WHERE a.is_del = 0 AND a.flag_app_sdm = 1 AND a.flag_app_kadiv=0 AND a.id_mutasi = '$id_mutasi'";
+
+						$val = $this->db->query($qmutasi)->result();
+						$bagianasal = $val[0]->bagianasal;
+						$bagiantujuan = $val[0]->bagiantujuan;
+
+						if($bagianasal == $bagiantujuan){
+							$update = "update db_hrd.t_pengajuan_mutasi set flag_app_unit=1,tgl_app_unit='$today',user_app_unit='$username',flag_app_tujuan=1,tgl_app_tujuan='$today',user_app_tujuan='$username' where id_mutasi = '$id_mutasi'";
 							$result = $this->db->query($update);
 						}
-						else if($bagiantujuan == $kd_unit){
-							$update = "update db_hrd.t_pengajuan_mutasi set flag_app_tujuan=1,tgl_app_tujuan='$today',user_app_tujuan='$username' where id_mutasi = '$id_mutasi'";
-							$result = $this->db->query($update);
+						else{
+							if($bagianasal == $kd_unit){
+								$update = "update db_hrd.t_pengajuan_mutasi set flag_app_unit=1,tgl_app_unit='$today',user_app_unit='$username' where id_mutasi = '$id_mutasi'";
+								$result = $this->db->query($update);
+							}
+							else if($bagiantujuan == $kd_unit){
+								$update = "update db_hrd.t_pengajuan_mutasi set flag_app_tujuan=1,tgl_app_tujuan='$today',user_app_tujuan='$username' where id_mutasi = '$id_mutasi'";
+								$result = $this->db->query($update);
+							}
 						}
 					}
 
