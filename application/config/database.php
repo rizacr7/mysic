@@ -212,6 +212,28 @@ if($_SERVER['SERVER_ADDR'] == '103.163.138.117'){ // Production   cpanel
 		'save_queries' => TRUE
 	   );
 
+	$db['db_undian'] = array(
+		'dsn' => '',
+		'hostname' => '127.0.0.1',
+		'username' => 'siccoid_undian',
+		'password' => 'Undian12345',
+		'database' => 'siccoid_undian_2026',
+		'dbdriver' => 'mysqli',
+		'dbprefix' => '',
+		'pconnect' => FALSE,
+		'db_debug' => TRUE,
+		'cache_on' => FALSE,
+		'cachedir' => '',
+		'char_set' => 'latin1',
+	    'dbcollat' => 'latin1_swedish_ci',
+		'swap_pre' => '',
+		'encrypt' => FALSE,
+		'compress' => FALSE,
+		'stricton' => FALSE,
+		'failover' => array(),
+		'save_queries' => TRUE
+	   );
+
 }
 else if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ //jika wms
 	$db['default'] = array(
@@ -335,6 +357,29 @@ else if($_SERVER['SERVER_ADDR'] == '103.163.139.46'){ //jika wms
 		'username' => 'shica',
 		'password' => 'shica12345',
 		'database' => 'db_pbb_kwsg',
+		'dbdriver' => 'mysqli',
+		'dbprefix' => '',
+		'pconnect' => FALSE,
+		'db_debug' => TRUE,
+		'cache_on' => FALSE,
+		'cachedir' => '',
+		'char_set' => 'latin1',
+	    'dbcollat' => 'latin1_swedish_ci',
+		'swap_pre' => '',
+		'encrypt' => FALSE,
+		'compress' => FALSE,
+		'stricton' => FALSE,
+		'failover' => array(),
+		'save_queries' => TRUE
+	   );
+
+	$db['db_undian'] = array(
+		'dsn' => '',
+		'hostname' => '127.0.0.1',
+		'port'=>'33061',
+		'username' => 'shica',
+		'password' => 'shica12345',
+		'database' => 'db_cuti',
 		'dbdriver' => 'mysqli',
 		'dbprefix' => '',
 		'pconnect' => FALSE,

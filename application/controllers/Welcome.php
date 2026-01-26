@@ -24,6 +24,7 @@ class Welcome extends CI_Controller {
 		$this->load->model('m_login');
 		$this->load->model('m_finger');
 		$this->load->model('func_global');
+		$this->db_undian = $this->load->database("db_undian", TRUE);
 	}
 	
 	public function index()
@@ -137,15 +138,39 @@ class Welcome extends CI_Controller {
 			redirect('Welcome/index');
 		}
 		else{
-			$this->load->view('general/header');	
-			$this->load->view('general/sidebar');	
-			$this->load->view('home',$data);	
-			$this->load->view('general/footer');	
+
+			if($this->session->userdata('username') == "KW16004" || $this->session->userdata('username') == "KW21012"){
+				$this->load->view('general/header');	
+				$this->load->view('general/sidebar');	
+				$this->load->view('home_undian',$data);	
+				$this->load->view('general/footer');	
+			}
+			else{
+				$this->load->view('general/header');	
+				$this->load->view('general/sidebar');	
+				$this->load->view('home',$data);	
+				$this->load->view('general/footer');	
+			}
+			
 		}
 	}
 
 	function logout(){
 		$this->session->sess_destroy();
 		redirect('Welcome/index');
+	}
+
+	function undangansic(){
+		$data = array(
+			'username' => $this->session->userdata('username'),
+			'nama' => $this->session->userdata('nama'),
+			'kantor' => $this->session->userdata('kantor'),
+			'nm_unit' => $this->session->userdata('nm_unit')
+		);
+
+		$this->load->view('general/header');	
+		$this->load->view('general/sidebar');	
+		$this->load->view('general/undangansic',$data);	
+		$this->load->view('general/footer');
 	}
 }
