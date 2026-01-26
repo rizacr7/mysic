@@ -96,7 +96,7 @@
                             <tbody>
                               <tr>
                                 <td class="text-muted" style="width:40%">Tgl. App SDM</td>
-                                <td class="fw-medium">: <?php echo $this->func_global->dsql_tgl($val['tgl_app_usdm']) ?></td>
+                                <td class="fw-medium">: <?php echo $this->func_global->dsql_tgl($val['tgl_app_sdm']) ?></td>
                               </tr>
                               <tr>
                                 <td class="text-muted" style="width:40%">Tgl. App MR</td>
