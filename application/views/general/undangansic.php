@@ -16,10 +16,14 @@
                
           ?>
           <h4>Selamat Datang <br> <?php echo $nama?></h4>
-          <?php }?>
+
           <div id="qrcode" class="my-3"></div>
           <p class="text-muted">Tunjukkan QR Code ini saat masuk ke Gedung Wisma</p>
-
+          <?php } else {?>
+          
+          <h4>Anda sudah melakukan check-in</h4>
+          <?php } ?>
+          <div class="mt-4">
           <a class="btn btn-creative btn-danger" href="<?php echo base_url('index.php/welcome/sukses'); ?>">Go to Home</a>
         </div>
       </div>
