@@ -63,17 +63,18 @@ class Absen extends CI_Controller {
 			exit;
 		}
 
-		$device_id = $input['device_id'];
-		$fingerprint = $input['fingerprint'];
-		$latitude    = $input['latitude'];
-		$longitude   = $input['longitude'];
-		$kd_kantor   = $input['kd_kantor'];
+		// $device_id = $input['device_id'];
+		// $fingerprint = $input['fingerprint'];
+		// $latitude    = $input['latitude'];
+		// $longitude   = $input['longitude'];
+		// $kd_kantor   = $input['kd_kantor'];
 
-		// $device_id   = $input['device_id']   ?? '';
-		// $fingerprint = $input['fingerprint'] ?? '';
-		// $latitude    = $input['latitude']    ?? '';
-		// $longitude   = $input['longitude']   ?? '';
-		// $kd_kantor   = $input['kd_kantor']   ?? '';
+		$device_id   = isset($input['device_id'])   ? $input['device_id']   : '';
+		$fingerprint = isset($input['fingerprint']) ? $input['fingerprint'] : '';
+		$latitude    = isset($input['latitude'])    ? $input['latitude']    : '';
+		$longitude   = isset($input['longitude'])   ? $input['longitude']   : '';
+		$kd_kantor   = isset($input['kd_kantor'])   ? $input['kd_kantor']   : '';
+
 
 		$lat_lon_in = $latitude.",".$longitude;
 		$proyekcurah = 0;
@@ -283,17 +284,17 @@ class Absen extends CI_Controller {
 			exit;
 		}
 
-		$device_id = $input['device_id'];
-		$fingerprint = $input['fingerprint'];
-		$latitude    = $input['latitude'];
-		$longitude   = $input['longitude'];
-		$kd_kantor   = $input['kd_kantor'];
+		// $device_id = $input['device_id'];
+		// $fingerprint = $input['fingerprint'];
+		// $latitude    = $input['latitude'];
+		// $longitude   = $input['longitude'];
+		// $kd_kantor   = $input['kd_kantor'];
 
-		// $device_id   = $input['device_id']   ?? '';
-		// $fingerprint = $input['fingerprint'] ?? '';
-		// $latitude    = $input['latitude']    ?? '';
-		// $longitude   = $input['longitude']   ?? '';
-		// $kd_kantor   = $input['kd_kantor']   ?? '';
+		$device_id   = isset($input['device_id'])   ? $input['device_id']   : '';
+		$fingerprint = isset($input['fingerprint']) ? $input['fingerprint'] : '';
+		$latitude    = isset($input['latitude'])    ? $input['latitude']    : '';
+		$longitude   = isset($input['longitude'])   ? $input['longitude']   : '';
+		$kd_kantor   = isset($input['kd_kantor'])   ? $input['kd_kantor']   : '';
 
 		$lat_lon_out = $latitude.",".$longitude;
 		$cekjarak = 1;
