@@ -379,7 +379,7 @@ class Absen extends CI_Controller {
 		// Validasi Kemiripan
 		// =======================
 	
-		if($kd_job == "N12" || $kd_job == "B18" || $kd_job== "D42" || $kd_job == "C24" || $kd_job == "N11" || $kd_kantor == "K0075"){
+		if($kd_job == "N12" || $kd_job == "B18" || $kd_job == "D42" || $kd_job == "C24" || $kd_job == "N11" || $kd_kantor == "K0075"){
 			//---khusus satpam dan expedisi cargo---
 			$cekdt = "select * from t_finger_mobile where no_peg = '$username' and tanggal='$tgl_now'";
 			$rows = $this->db_hrdonline->query($cek)->num_rows();
