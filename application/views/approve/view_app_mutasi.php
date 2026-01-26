@@ -87,15 +87,17 @@
 
                     <div class="container">
 
-                      <div class="card shadow-sm" style="background-color:#f7f7f7;">
-                         
+                      <div class="card shadow-sm" style="background-color:#f7f7f7;"> 
                         <div class="card-body">
-                          
+  
                           <h5 class="mb-2 fw-semibold"><?php echo $jnsperubahan ?></h5>
                           <h6 class="mb-4 text-muted"><?php echo $perubahan ?></h6>
-
                           <table class="table table-sm table-borderless mb-0">
                             <tbody>
+                              <tr>
+                                <td class="text-muted" style="width:40%">Tgl. App SDM</td>
+                                <td class="fw-medium">: <?php echo $this->func_global->dsql_tgl($val['tgl_app_usdm']) ?></td>
+                              </tr>
                               <tr>
                                 <td class="text-muted" style="width:40%">Tgl. App MR</td>
                                 <td class="fw-medium">: <?php echo $this->func_global->dsql_tgl($val['tgl_app_unit']) ?></td>
