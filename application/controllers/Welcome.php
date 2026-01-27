@@ -172,4 +172,18 @@ class Welcome extends CI_Controller {
 		$this->load->view('general/undangansic',$data);	
 		$this->load->view('general/footer');
 	}
+
+	function tukarhadiah(){
+		$data = array(
+			'username' => $this->session->userdata('username'),
+			'nama' => $this->session->userdata('nama'),
+			'kantor' => $this->session->userdata('kantor'),
+			'nm_unit' => $this->session->userdata('nm_unit')
+		);
+
+		$this->load->view('general/header');	
+		$this->load->view('general/sidebar');	
+		$this->load->view('general/tukarhadiah',$data);	
+		$this->load->view('general/footer');
+	}
 }
