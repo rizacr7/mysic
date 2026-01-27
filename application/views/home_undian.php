@@ -253,11 +253,10 @@
 
   <script type="text/javascript">
 
-  window.onload = function() {
-      jam();
-      getLocation();
-      loadModels();
-  };
+  document.addEventListener("DOMContentLoaded", () => {
+    jam();
+    getLocation();
+  });
 
 function jam() {
     let e = document.getElementById('jam'), d = new Date();
@@ -495,7 +494,7 @@ async function cek_out() {
 
 </script>
 
-<script>
+<!-- <script>
 let deferredPrompt = null;
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -511,4 +510,4 @@ document.getElementById('installApp').addEventListener('click', async () => {
     await deferredPrompt.userChoice;
     deferredPrompt = null;
 });
-</script>
+</script> -->

@@ -211,11 +211,10 @@
 
   <script type="text/javascript">
 
-  window.onload = function() {
-      jam();
-      getLocation();
-      loadModels();
-  };
+  document.addEventListener("DOMContentLoaded", () => {
+    jam();
+    getLocation();
+  });
 
 function jam() {
     let e = document.getElementById('jam'), d = new Date();
@@ -252,8 +251,7 @@ function showPosition(position) {
     $("#long").val(position.coords.longitude);
 }
 
-getLocation();
-jam();
+
 
 
 function daftarfaceid() {
@@ -443,7 +441,7 @@ async function cek_out() {
 
 
 </script>
-
+<!-- 
 <script>
 let deferredPrompt = null;
 
@@ -460,4 +458,4 @@ document.getElementById('installApp').addEventListener('click', async () => {
     await deferredPrompt.userChoice;
     deferredPrompt = null;
 });
-</script>
+</script> -->
