@@ -312,8 +312,8 @@ function getLocation() {
         showPosition,
         showError,
         {
-            enableHighAccuracy: false, // ⚡ lebih cepat
-            timeout: 5000,             // ⏱ max 5 detik
+            enableHighAccuracy: true, // ⚡ lebih cepat
+            timeout: 15000,             // ⏱ max 15 detik
             maximumAge: 60000          // ♻️ cache 1 menit
         }
     );
@@ -329,7 +329,8 @@ function showPosition(position) {
     const lng = position.coords.longitude;
     const acc = position.coords.accuracy;
 
-    x.innerHTML = `Koordinat Absensi: ${lat}, ${lng}<br>Akurasi: ±${Math.round(acc)} m`;
+    // x.innerHTML = `Koordinat Absensi: ${lat}, ${lng}<br>Akurasi: ±${Math.round(acc)} m`;
+    x.innerHTML = `Koordinat Absensi: ${lat}, ${lng}`;
 
     document.getElementById("lat").value = lat;
     document.getElementById("long").value = lng;

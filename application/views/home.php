@@ -273,7 +273,7 @@ function getLocation() {
         showError,
         {
             enableHighAccuracy: true, // ⚡ lebih cepat
-            timeout: 10000,             // ⏱ max 5 detik
+            timeout: 15000,             // ⏱ max 15 detik
             maximumAge: 60000          // ♻️ cache 1 menit
         }
     );
