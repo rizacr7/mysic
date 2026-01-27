@@ -80,12 +80,13 @@
                 $data = $this->db_undian->query($queryhadiah)->result();
           ?>
           <div class="col-12 col-sm-12 col-lg-12">
-        
-          <div class="card card-bg-img bg-img" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/undangangathering.jpeg')">
-            <div class="card-body p-4 direction-rtl" style="height: 220px;">
+
+          
+          <div class="card card-bg-img bg-img" onclick="undangansic()" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/undangangathering.jpeg')">
+            <div class="card-body p-4 direction-rtl" style="height: 180px;">
               <h6 class="display-3 mb-4 fw-semibold"></h6>
             </div>
-            <a class="btn btn-danger" onclick="undangansic()">Generate QR Code</a>
+            <a class="btn btn-danger">Generate QR Code</a>
           </div>
           
           </div>
@@ -100,11 +101,11 @@
                 
           ?>
            <div class="col-12 col-sm-12 col-lg-12">
-            <div class="card card-bg-img bg-img" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/hadiah.jpg')">
-              <div class="card-body p-4 direction-rtl" style="height: 220px;">
+            <div class="card card-bg-img bg-img" onclick="tukarhadiah()" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/doorprize.jpg')">
+              <div class="card-body p-4 direction-rtl" style="height: 180px;">
                 <h6 class="display-3 mb-4 fw-semibold"></h6>
               </div>
-              <a class="btn btn-primary" onclick="tukarhadiah()">Generate QR Code</a>
+              <a class="btn btn-primary">Generate QR Code</a>
             </div>
           </div>
           <?php 
