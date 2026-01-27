@@ -268,33 +268,101 @@ function set(e) { return e < 10 ? '0' + e : e; }
 
 // ===== GEOLOCATION =====
 let x = document.getElementById("demo");
+// function getLocation() {
+//     var x = document.getElementById("demo");
+//     var loading = document.getElementById("loading");
+
+//     // tampilkan spinner
+//     loading.style.display = "block";
+//     x.innerHTML = "";
+//     if (navigator.geolocation) {
+//         navigator.geolocation.getCurrentPosition(showPosition);
+//     } else {
+//         loading.style.display = "none";
+//         x.innerHTML = "Geolocation is not supported by this browser.";
+//     }
+// }
+
+
+// function showPosition(position) {
+//     var x = document.getElementById("demo");
+//     var loading = document.getElementById("loading");
+//     loading.style.display = "none";
+//     x.innerHTML = "Koordinat Absensi: " + position.coords.latitude + "," + position.coords.longitude;
+//     $("#lat").val(position.coords.latitude);
+//     $("#long").val(position.coords.longitude);
+// }
+
+let lastPosition = null;
+
 function getLocation() {
-    var x = document.getElementById("demo");
-    var loading = document.getElementById("loading");
+    const x = document.getElementById("demo");
+    const loading = document.getElementById("loading");
 
-    // tampilkan spinner
     loading.style.display = "block";
-    x.innerHTML = "";
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        loading.style.display = "none";
-        x.innerHTML = "Geolocation is not supported by this browser.";
-    }
-}
+    x.innerHTML = "Mengambil lokasi...";
 
+    if (!navigator.geolocation) {
+        loading.style.display = "none";
+        x.innerHTML = "Browser tidak mendukung GPS";
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        showPosition,
+        showError,
+        {
+            enableHighAccuracy: false, // ⚡ lebih cepat
+            timeout: 5000,             // ⏱ max 5 detik
+            maximumAge: 60000          // ♻️ cache 1 menit
+        }
+    );
+}
 
 function showPosition(position) {
-    var x = document.getElementById("demo");
-    var loading = document.getElementById("loading");
+    const x = document.getElementById("demo");
+    const loading = document.getElementById("loading");
+
     loading.style.display = "none";
-    x.innerHTML = "Koordinat Absensi: " + position.coords.latitude + "," + position.coords.longitude;
-    $("#lat").val(position.coords.latitude);
-    $("#long").val(position.coords.longitude);
+
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    const acc = position.coords.accuracy;
+
+    x.innerHTML = `Koordinat Absensi: ${lat}, ${lng}<br>Akurasi: ±${Math.round(acc)} m`;
+
+    document.getElementById("lat").value = lat;
+    document.getElementById("long").value = lng;
+
+    lastPosition = position;
 }
 
-getLocation();
-jam();
+function showError(error) {
+    const x = document.getElementById("demo");
+    const loading = document.getElementById("loading");
+
+    loading.style.display = "none";
+
+    let msg = "";
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            msg = "Izin lokasi ditolak";
+            break;
+        case error.POSITION_UNAVAILABLE:
+            msg = "Lokasi tidak tersedia";
+            break;
+        case error.TIMEOUT:
+            msg = "GPS timeout, coba lagi";
+            break;
+        default:
+            msg = "Gagal mengambil lokasi";
+    }
+
+    x.innerHTML = msg;
+}
+
+// getLocation();
+// jam();
 
 
 function daftarfaceid() {
