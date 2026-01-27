@@ -81,7 +81,6 @@
           ?>
           <div class="col-12 col-sm-12 col-lg-12">
         
-         
           <div class="card card-bg-img bg-img" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/undangangathering.jpeg')">
             <div class="card-body p-4 direction-rtl" style="height: 220px;">
               <h6 class="display-3 mb-4 fw-semibold"></h6>
@@ -89,17 +88,6 @@
             <a class="btn btn-danger" onclick="undangansic()">Generate QR Code</a>
           </div>
           
-            <!--<div class="card single-product-card" style="background-color:#34A6F4">-->
-            <!--  <div class="card-body p-3">-->
-            <!--    <div class="element-heading-wrapper">-->
-            <!--      <i class="bi bi-ticket-detailed-fill"></i>-->
-            <!--      <div class="heading-text">-->
-            <!--        <span style="color:#FFFFFF;font-size:17px; font-weight:bold;">Undangan Gathering SIC Ke-62</span>-->
-            <!--        <button class="btn btn-danger w-100" onclick="undangansic()">Generate QR Code</button>-->
-            <!--      </div>-->
-            <!--    </div>-->
-            <!--  </div>-->
-            <!--</div>-->
           </div>
           <?php }?>
         
@@ -112,16 +100,11 @@
                 
           ?>
            <div class="col-12 col-sm-12 col-lg-12">
-            <div class="card single-product-card" style="background-color:#34A6F4">
-              <div class="card-body p-3">
-                <div class="element-heading-wrapper">
-                  <i class="bi bi-box-fill"></i>
-                  <div class="heading-text">
-                    <span style="color:#FFFFFF;font-size:17px; font-weight:bold;">Selamat Anda Mendapatkan Hadiah Doorprize - <u><?php echo $nmhadiah?></u></span>
-                    <button class="btn btn-danger w-100" onclick="tukarhadiah()">Generate QR Code</button>
-                  </div>
-                </div>
+            <div class="card card-bg-img bg-img" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/hadiah.jpg')">
+              <div class="card-body p-4 direction-rtl" style="height: 220px;">
+                <h6 class="display-3 mb-4 fw-semibold"></h6>
               </div>
+              <a class="btn btn-primary" onclick="tukarhadiah()">Generate QR Code</a>
             </div>
           </div>
           <?php 
