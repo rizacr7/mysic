@@ -102,7 +102,8 @@ class Welcome extends CI_Controller {
 	function sukses(){
 		$tglNow = $this->func_global->dsql_tglfull(date("Y-m-d"));
 		$hari = date("D");
-		
+		$today = date("Y-m-d");
+
 		if($hari == "Sun"){
 			$hari_ini = "Minggu";
 		}
@@ -138,7 +139,7 @@ class Welcome extends CI_Controller {
 			redirect('Welcome/index');
 		}
 		else{
-			if($this->session->userdata('username') == "KW16004" || $this->session->userdata('username') == "KW21012" || $this->session->userdata('username') == "KW96155" || $this->session->userdata('username') == "KW13005"){
+			if($today <= "2026-01-31"){
 				$this->load->view('general/header');	
 				$this->load->view('general/sidebar');	
 				$this->load->view('home_undian',$data);	
@@ -150,7 +151,6 @@ class Welcome extends CI_Controller {
 				$this->load->view('home',$data);	
 				$this->load->view('general/footer');	
 			}
-			
 		}
 	}
 
