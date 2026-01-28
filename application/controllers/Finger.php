@@ -119,7 +119,6 @@ class Finger extends CI_Controller {
 		$id_finger = $rpeg[0]->id_finger;
 		$no_peg_lm = $rpeg[0]->no_peg_lm;
 		$kd_kantor_in = "";
-
 		
         echo "
 			<table id='table_finger' class='table mb-0 table-striped table-bordered' width='100%'>
@@ -415,6 +414,14 @@ class Finger extends CI_Controller {
 				$keterangan = "<span class='m-1 badge rounded-pill bg-success'>".$keterangan."</span>";
 			}
 
+			//---izin pegawai ----
+			$izin = $this->db_hrdonline->query("SELECT * FROM t_izin WHERE no_peg = '$no_peg' AND tgl_izin = '$tgl_dsql' AND status_hapus = 0 AND flag_app=1")->result();
+			$izinPeg = "";
+			if(count($izin) > 0){
+				$nmIzin = $izin[0]->keterangan;
+				$izinPeg = " [ " . $nmIzin . " ]";
+			}
+
 			echo "
 			<tr>
 				<td align='center'>".$tanggal."</td>
@@ -422,7 +429,7 @@ class Finger extends CI_Controller {
 				<td>".$chekcin."</td>
 				<td>".$chekcout."</td>
 				<td>".$terlambat."</td>
-				<td>".$keterangan."</td>
+				<td>".$keterangan." $izinPeg</td>
 			</tr>";
 		}
 		
@@ -431,224 +438,6 @@ class Finger extends CI_Controller {
     }
 	
 
-	// function cekin_finger(){
-	// 	date_default_timezone_set('Asia/Jakarta');
-	// 	$username = $this->session->userdata('username');
-	// 	$kode = $this->session->userdata('kode_finger');
-	// 	$tgl_now = date('Y-m-d');
-	// 	$checkin = date('H:i:s');
-	// 	$proyekcurah = 0;
-	// 	$latitude = $_POST['lat'];
-	// 	$longitude = $_POST['long'];
-	// 	//$radius = 700;
-	// 	$lat_lon_in = $latitude.",".$longitude;
-
-	// 	$device_id = trim($this->input->post('device_id'));
-	// 	// echo $device_id;
-
-	// 	if (!$device_id) {
-	// 		log_message('error', "Device ID kosong untuk user $username");
-	// 		echo 7; // device tidak valid
-	// 		return;
-	// 	}
-
-	// 	// cek apakah user sudah punya device
-	// 	$sql_cek = "SELECT * FROM mas_peg_backup WHERE no_peg = '$username'";
-	// 	$cekDevice = $this->db->query($sql_cek, [$username])->row();
-
-	// 	if ($cekDevice) {
-	// 		if (trim($cekDevice->device_id) != $device_id) {
-	// 			log_message('error', "Device tidak sesuai: DB={$cekDevice->device_id} POST=$device_id");
-	// 			echo 7; // device tidak sesuai
-	// 			return;
-	// 		}
-	// 	} else {
-	// 		// belum ada, simpan device baru
-	// 		$sql_insert = "INSERT INTO mas_peg_backup (no_peg, device_id, created_at) VALUES (?, ?, ?)";
-	// 		$this->db->query($sql_insert, [$username, $device_id, date('Y-m-d H:i:s')]);
-	// 	}
-
-
-		
-	// 	$ipaddress = '-';
-	// 	if (!empty($_SERVER['HTTP_CLIENT_IP'])){
-	// 	$ipaddress=$_SERVER['HTTP_CLIENT_IP'];
-	// 	}elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
-	// 	$ipaddress=$_SERVER['HTTP_X_FORWARDED_FOR'];
-	// 	}else{
-	// 	$ipaddress=$_SERVER['REMOTE_ADDR'];
-	// 	}
-
-	// 	// --- cek lokasi kantor ---
-	// 	$kd_kantor = $_POST['kd_kantor'];
-
-	// 	if($username == ""){
-	// 		echo 6;
-	// 	}
-	// 	else{
-	// 	if($kd_kantor != ''){
-	// 		$dKantor = "select * from m_kantor where kd_kantor = '$kd_kantor'";
-	// 		$rdt = $this->db_hrdonline->query($dKantor)->result();
-	// 		$koordinatKantor = $rdt[0]->koordinat_kantor;
-	// 		$radius = $rdt[0]->radius;
-
-	// 		// --- jab ---
-	// 		$qmaspeg = "select kd_jab,kd_job,kd_unit from mas_peg_backup where no_peg = '$username'";
-	// 		$qdt = $this->db_hrdonline->query($qmaspeg)->result();
-	// 		$kd_jab = $qdt[0]->kd_jab;
-	// 		$kd_job = $qdt[0]->kd_job;
-			
-	// 		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105"){
-	// 			$proyekcurah = 1;
-	// 		}
-	// 	}
-	// 	else{
-	// 		$qfinger = "select a.id_finger,b.kd_kantor,c.nm_kantor,c.koordinat_kantor,a.kd_jab,c.radius,a.kd_job from mas_peg_backup a 
-	// 		left join m_unit b on a.kd_unit = b.kd_unit
-	// 		left join m_kantor c on b.kd_kantor = c.kd_kantor
-	// 		where a.no_peg = '$username'";
-	// 		$rdt = $this->db_hrdonline->query($qfinger)->result();
-	// 		$koordinatKantor = $rdt[0]->koordinat_kantor;
-	// 		$kd_jab = $rdt[0]->kd_jab;
-	// 		$radius = $rdt[0]->radius;
-	// 		$kd_job = $rdt[0]->kd_job;
-	// 	}
-		
-	// 	$str = explode(",", $koordinatKantor);
-	// 	$lat1 = $str[0];
-	// 	$lon1 = $str[1];
-
-	// 	// --- koordinat absen ---
-	// 	$lat2 = $latitude;
-	// 	$lon2 = $longitude;
-
-	// 	// if($username == "KW16004"){
-	// 	// 	$lat1 =-6.392984937751868;
-	// 	// 	$lon1 = 107.42884972412115;
-
-	// 	// 	$lat2 = -6.3929788;
-	// 	// 	$lon2 = 107.4288052;
-	// 	// }
-
-	// 	// --- rumus menghitung jarak ---
-	// 	$theta = $lon1 - $lon2;
-	// 	$miles = (sin(deg2rad($lat1)) * sin(deg2rad($lat2))) + (cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)));
-	// 	$miles = acos($miles);
-	// 	$miles = rad2deg($miles);
-	// 	$miles = $miles * 60 * 1.1515;
-	// 	$feet = $miles * 5280;
-	// 	$yards = $feet / 3;
-	// 	$kilometers = round($miles * 1.609344,2);
-	// 	$meters = $kilometers * 1000;
-
-	// 	// --- khusus manager & kadiv---
-	// 	if($kd_jab < 30 || $kd_jab == 102 || $proyekcurah == "1"){
-	// 		$cekdt = "select COUNT(*) as dt_finger from t_finger_mobile where no_peg = '$username' and tanggal='$tgl_now'";
-	// 		$rdt = $this->db_hrdonline->query($cekdt)->result();
-	// 		$dt_finger = $rdt[0]->dt_finger;
-	// 		if($dt_finger == 0){	
-	// 			if($kd_kantor == 'K0001' || $kd_kantor == 'K0002' || $kd_kantor == 'K0025' || $kd_kantor == 'K0073'){
-	// 				if($checkin > '07:31:00'){ 
-	// 					$cekquery = "SELECT TIMEDIFF('$checkin', '07:31:00') AS terlambat";
-	// 					$rdt = $this->db->query($cekquery)->result();
-	// 					$terlambat = $rdt[0]->terlambat;
-
-	// 					$insert = "insert into t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in'";
-	// 					$this->db_hrdonline->query($insert);
-	// 				}
-	// 				else{
-	// 					$insert = "insert into t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in'";
-	// 					$this->db_hrdonline->query($insert);
-	// 				}
-	// 			}
-	// 			else{ // --- khusus pbb --
-	// 				if($checkin > '08:01:00'){ 
-	// 					$cekquery = "SELECT TIMEDIFF('$checkin', '08:01:00') AS terlambat";
-	// 					$rdt = $this->db_hrdonline->query($cekquery)->result();
-	// 					$terlambat = $rdt[0]->terlambat;
-
-	// 					$insert = "insert into t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in'";
-	// 					$this->db_hrdonline->query($insert);
-	// 				}
-	// 				else{
-	// 					$insert = "insert into t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in'";
-	// 					$this->db_hrdonline->query($insert);
-	// 				}
-	// 			}
-				
-	// 			$this->db_hrdonline->close();
-	// 			echo 1;
-	// 		}
-	// 		else{
-	// 			echo 2;
-	// 		}
-	// 	}
-	// 	else{
-	// 		if($meters > $radius){
-	// 			echo 5;
-	// 		}
-	// 		else{
-	// 			$qbagian = "select b.kd_bagian from mas_peg_backup a left join m_unit b on a.kd_unit = b.kd_unit where a.no_peg= '$username'";
-	// 			$rdt = $this->db_hrdonline->query($qbagian)->result();
-	// 			$kdbagian = $rdt[0]->kd_bagian;
-				
-	// 			$cekdt = "select COUNT(*) as dt_finger from t_finger_mobile where no_peg = '$username' and tanggal='$tgl_now'";
-	// 			$rdt = $this->db_hrdonline->query($cekdt)->result();
-	// 			$dt_finger = $rdt[0]->dt_finger;
-
-	// 			if($dt_finger == 0){	
-	// 				// -- khusus satpam & eksp.cargo----
-	// 				if($username == "KW98118" || $username == "KW16029" || $username == "KW99009" || $username == "KW98057" || $username == "KW97035" || $username == "KW97026" || $username == "KW04001" || $username == "KW94100" || $username == "KW16029" || $username == "KW98118" || $username == "KW00003" || $username == "TT13320" || $username == "OS25153" || $username == "KW02029" || $kd_job == "N12" || $kd_job == "B18" || $kd_kantor == "K0075" || $username == "KW99013" || $username == "TK25002"){
-	// 					$insert = "insert into t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in'";
-	// 					$this->db_hrdonline->query($insert);
-	// 					echo 1;
-	// 				}
-	// 				else{
-	// 					// --- insert hrd online ---
-	// 					if($checkin > '18:00:00'){
-	// 						echo 3;
-	// 					}
-	// 					else{
-	// 						if($kd_kantor == 'K0001' || $kd_kantor == 'K0002' || $kd_kantor == 'K0025' || $kd_kantor == 'K0073'){
-	// 							if($checkin > '07:31:00'){ 
-	// 								$cekquery = "SELECT TIMEDIFF('$checkin', '07:31:00') AS terlambat";
-	// 								$rdt = $this->db->query($cekquery)->result();
-	// 								$terlambat = $rdt[0]->terlambat;
-			
-	// 								$insert = "insert into t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in'";
-	// 								$this->db_hrdonline->query($insert);
-	// 							}
-	// 							else{
-	// 								$insert = "insert into t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in'";
-	// 								$this->db_hrdonline->query($insert);
-	// 							}
-	// 						}
-	// 						else{ // --- khusus pbb --
-	// 							if($checkin > '08:01:00'){ 
-	// 								$cekquery = "SELECT TIMEDIFF('$checkin', '08:01:00') AS terlambat";
-	// 								$rdt = $this->db->query($cekquery)->result();
-	// 								$terlambat = $rdt[0]->terlambat;
-			
-	// 								$insert = "insert into t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in'";
-	// 								$this->db_hrdonline->query($insert);
-	// 							}
-	// 							else{
-	// 								$insert = "insert into t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in'";
-	// 								$this->db_hrdonline->query($insert);
-	// 							}
-	// 						}
-	// 						$this->db_hrdonline->close();
-	// 						echo 1;
-	// 					}
-	// 				}
-	// 			}
-	// 			else{
-	// 				echo 2;
-	// 			}
-	// 		}
-	// 	}
-	// 	}
-	// }
 	function cekin_finger() {
     date_default_timezone_set('Asia/Jakarta');
 
