@@ -71,7 +71,7 @@
           </div>
           
           <?php 
-            $querypeserta = "SELECT * FROM peserta WHERE no_peg = '".$this->session->userdata('username')."'";
+            $querypeserta = "SELECT * FROM peserta WHERE no_peg = '".$this->session->userdata('username')."' AND is_doorprize = 1";
             $rdt = $this->db_undian->query($querypeserta)->num_rows();
             if($rdt != 0){
                 $data = $this->db_undian->query($querypeserta)->result();
