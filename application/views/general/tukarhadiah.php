@@ -14,13 +14,13 @@
                 $nmhadiah = $data[0]->nama_hadiah;
                 $nmhadiah2 = "";
                 if($rdt == 2){
-                $nmhadiah2 = "dan " . $data[1]->nama_hadiah;
+                $nmhadiah2 = " - " . $data[1]->nama_hadiah;
                 }
                
                 $no_peg = $data[0]->no_peg;
                
           ?>
-          <h4>Selamat <br> Anda Mendapatkan Hadiah <u><?php echo $nmhadiah?> <?php echo $nmhadiah2?></u></h4>
+          <h4>Selamat <br> Anda Mendapatkan Hadiah <?php echo $nmhadiah?> <?php echo $nmhadiah2?></h4>
           <?php }?>
           <div id="qrcode" class="my-3"></div>
         <p class="text-muted">Tunjukkan QR Code ini saat pengambilan hadiah</p>
