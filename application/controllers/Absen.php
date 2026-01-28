@@ -113,7 +113,7 @@ class Absen extends CI_Controller {
 		$kd_job = $qdt[0]->kd_job;
 		$deviceid_maspeg = $qdt[0]->device_id;
 
-		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105" || $username == "KW16004" || $username == "OS25132"){
+		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105"){
 			$proyekcurah = 1;
 		}
 
@@ -163,9 +163,7 @@ class Absen extends CI_Controller {
 			$ipaddress=$_SERVER['REMOTE_ADDR'];
 		}
 		
-		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105"){
-			$proyekcurah = 1;
-		}
+		
 
 		$cekdt = "SELECT COUNT(*) as dt_finger from t_finger_mobile WHERE no_peg = '$username' and tanggal='$tgl_now'";
 		$rdt = $this->db_hrdonline->query($cekdt)->result();
