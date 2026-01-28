@@ -73,16 +73,19 @@
           <?php 
             // $queryhadiah = "SELECT * FROM peserta WHERE no_peg = '".$this->session->userdata('username')."' and is_checkin = 0";
             
-            $queryhadiah = "SELECT * FROM peserta WHERE no_peg IN ('KW16004','KW21012')";
+            $querypeserta = "SELECT * FROM peserta WHERE no_peg IN ('KW16004','KW21012')";
             
-            $rdt = $this->db_undian->query($queryhadiah)->num_rows();
+            $rdt = $this->db_undian->query($querypeserta)->num_rows();
             if($rdt != 0){
-                $data = $this->db_undian->query($queryhadiah)->result();
+                $data = $this->db_undian->query($querypeserta)->result();
+                $nopeg= $this->session->userdata('username');
+               
           ?>
           <div class="col-12 col-sm-12 col-lg-12">
 
-          
-          <div class="card card-bg-img bg-img" onclick="undangansic()" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/undangangathering.jpeg')">
+
+
+          <div class="card card-bg-img bg-img" onclick="undangansic('<?php echo $nopeg?>')" style="background-image: url('<?php echo base_url()?>assets/img/bg-img/undangangathering.jpeg')">
             <div class="card-body p-4 direction-rtl" style="height: 180px;">
               <h6 class="display-3 mb-4 fw-semibold"></h6>
             </div>
@@ -387,8 +390,12 @@ function tukarhadiah(){
     window.location.href='<?php echo base_url(); ?>index.php/welcome/tukarhadiah';
 }
 
-function undangansic(){
-    window.location.href='<?php echo base_url(); ?>index.php/welcome/undangansic';
+// function undangansic(){
+//     window.location.href='<?php echo base_url(); ?>index.php/welcome/undangansic';
+// }
+
+function undangansic(nopeg){
+    window.open('https://undian2026.sic.co.id/undangan/?no_undian='+nopeg);
 }
 
 
