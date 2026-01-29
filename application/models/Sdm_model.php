@@ -778,18 +778,7 @@ class Sdm_model extends CI_Model{
             }
         }
         else if($status_user == "KADIV"){
-            if($kd_unit == "90AA"){
-                //--kadiv bisnis---
-                $whereapp = "AND flag_app_unit = 1 AND a.flag_app_kadiv=0 AND f.kd_divisi = '$kd_unit'";
-            }
-            else if($kd_unit == "90AB"){
-                //---kadiv keuangan---
-                $whereapp = "AND flag_app_unit = 1 AND a.flag_app_kadiv=0 AND f.kd_divisi = '$kd_unit'";
-            }
-            else if($kd_unit == "90AC"){
-                //---kadiv b2b
-                $whereapp = "AND flag_app_unit = 1 AND a.flag_app_kadiv=0 AND f.kd_divisi = '$kd_unit'";
-            }
+            $whereapp = "AND a.flag_app_sdm = 1 AND flag_app_unit = 1 AND a.flag_app_kadiv=0 AND f.kd_divisi = '$kd_unit'";
         }
         else if($status_user == "MR"){
 			if($kd_unit == "90C0"){
@@ -836,18 +825,7 @@ class Sdm_model extends CI_Model{
             }
         }
         else if($status_user == "KADIV"){
-            if($kd_unit == "90AA"){
-                //--kadiv bisnis---
-                $whereapp = "AND flag_app_unit = 1 AND a.flag_app_kadiv=1 AND f.kd_divisi = '$kd_unit'";
-            }
-            else if($kd_unit == "90AB"){
-                //---kadiv keuangan---
-                $whereapp = "AND flag_app_unit = 1 AND a.flag_app_kadiv=1 AND f.kd_divisi = '$kd_unit'";
-            }
-            else if($kd_unit == "90AC"){
-                //---kadiv b2b
-                $whereapp = "AND flag_app_unit = 1 AND a.flag_app_kadiv=1 AND f.kd_divisi = '$kd_unit'";
-            }
+            $whereapp = "AND a.flag_app_sdm = 1 AND flag_app_unit = 1 AND a.flag_app_kadiv=1 AND f.kd_divisi = '$kd_unit'";
         }
         else if($status_user == "MR"){
 			if($kd_unit == "90C0"){
