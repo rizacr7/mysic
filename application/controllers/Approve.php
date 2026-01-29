@@ -99,6 +99,19 @@ class Approve extends CI_Controller {
 		$this->load->view('general/footer');	
 	}
 
+	public function app_mutasi_data()
+	{
+		$no_peg = $_GET['no_peg'];
+		$Datapeg = $this->m_login->profilepegawai($no_peg);
+		$Param  = array();
+		$Param['Datapeg']= $Datapeg;
+
+		$this->load->view('general/header');	
+		$this->load->view('general/sidebar');	
+		$this->load->view('approve/data_app_mutasi',$Param);
+		$this->load->view('general/footer');	
+	}
+
 	public function app_request()
 	{
 		$no_peg = $this->session->userdata('username');
