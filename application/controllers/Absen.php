@@ -24,6 +24,7 @@ class Absen extends CI_Controller {
 		$this->load->model('m_login');
 		$this->load->model('absensi_model');
 		$this->load->model('func_global');
+		$this->load->library('user_agent');
 		$this->db_hrdonline = $this->load->database("hrdonline", TRUE);
 
 		if($this->session->userdata('username') == ""){
@@ -51,6 +52,19 @@ class Absen extends CI_Controller {
 				'message' => 'Session Habis, Silakan Login Ulang!'
 			]);
 			exit;
+		}
+
+		//---cek device---
+		if ($this->agent->is_mobile() && !$this->agent->is_tablet()) {
+			$device="HP";
+		} else {
+			$device="PC";
+
+			// echo json_encode([
+			// 	'status' => 'error',
+			// 	'message' => $device." - Fitur Absensi Hanya Bisa Digunakan di Perangkat Mobile"
+			// ]);
+			// exit;
 		}
 
 		// Ambil data JSON
@@ -183,7 +197,7 @@ class Absen extends CI_Controller {
 					exit;
 				}
 				else{
-					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1";
+					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."'";
 					$this->db_hrdonline->query($insert);
 
 					echo json_encode([
@@ -233,7 +247,7 @@ class Absen extends CI_Controller {
 					}
 					else{
 						// --- insert t_finger_mobile ---
-						$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',shift_time_in='$jam_masuk',shift_time_out='$jam_pulang',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1";
+						$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',shift_time_in='$jam_masuk',shift_time_out='$jam_pulang',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."'";
 						$this->db_hrdonline->query($insert);
 
 						echo json_encode([

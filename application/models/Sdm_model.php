@@ -763,6 +763,17 @@ class Sdm_model extends CI_Model{
 		$kd_unit = $data['kd_unit'];
 		$kd_jab = $data['kd_jab'];
 		$kd_level = $data['kd_level'];
+		$kdjab = substr($kd_jab,0,1);
+
+		if($kd_jab == "01" || $kd_jab == "02" || $kd_jab == "04"){
+			$status_user = "PENGURUS";
+		}
+		else if($kd_jab == "10" || $kd_jab == "26" || $kd_jab == "102"){
+			$status_user = "KADIV";
+		}
+		else if($kdjab == "2"){
+			$status_user = "MR";
+		}
 
 		$whereapp = "AND a.flag_app_sdm = 1 AND a.flag_app_sdm2 = 0 ";
 
@@ -800,6 +811,7 @@ class Sdm_model extends CI_Model{
         LEFT JOIN db_hrd.m_unit g ON a.`kd_unit_tujuan` =  g.`kd_unit`
         LEFT JOIN db_hrd.m_bagian h ON g.kd_bagian = h.kd_bagian
         WHERE a.is_del = 0 ".$whereapp." ORDER BY a.tgl_pengajuan DESC;";
+		// echo $query;
 		$result = $this->db_hrdonline->query($query)->result_array();
 		return $result; 
 	}
@@ -858,6 +870,17 @@ class Sdm_model extends CI_Model{
 		$kd_unit = $data['kd_unit'];
 		$kd_jab = $data['kd_jab'];
 		$kd_level = $data['kd_level'];
+		$kdjab = substr($kd_jab,0,1);
+
+		if($kd_jab == "01" || $kd_jab == "02" || $kd_jab == "04"){
+			$status_user = "PENGURUS";
+		}
+		else if($kd_jab == "10" || $kd_jab == "26" || $kd_jab == "102"){
+			$status_user = "KADIV";
+		}
+		else if($kdjab == "2"){
+			$status_user = "MR";
+		}
 
 		$whereapp = " AND a.`flag_app_unit` = 0";
 

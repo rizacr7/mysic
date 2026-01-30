@@ -116,9 +116,7 @@ class Approve extends CI_Controller {
 	{
 		$no_peg = $this->session->userdata('username');
 		$jab = $this->session->userdata('jab');
-		// $jab = "KADIV";
-		// $no_peg = "KW00025";
-
+	
 		$Datapeg = $this->m_login->profilepegawai($no_peg);
 		$Param  = array();
 		$Param['Datapeg']= $Datapeg;
@@ -140,6 +138,27 @@ class Approve extends CI_Controller {
 		else{
 			$this->load->view('not_found',$Param);
 		}
+		
+		$this->load->view('general/footer');	
+	}
+
+	public function app_request_data()
+	{
+		$no_peg = $_GET['no_peg'];
+		$Datapeg = $this->m_login->profilepegawai($no_peg);
+		$Param  = array();
+		$Param['Datapeg']= $Datapeg;
+
+		$this->load->view('general/header');	
+		$this->load->view('general/sidebar');	
+
+		if($Datapeg[0]->kd_jab == "01" || $Datapeg[0]->kd_jab == "04" || $Datapeg[0]->kd_jab == "02"){
+			$this->load->view('approve/data_app_request',$Param);	
+		}
+		else{
+			$this->load->view('approve/data_app_request_unit',$Param);
+		}
+		
 		
 		$this->load->view('general/footer');	
 	}

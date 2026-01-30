@@ -7,7 +7,7 @@ canvas { border:1px solid #ccc; border-radius:4px; touch-action: none; }
   <!-- Element Heading -->
   <div class="container">
     <div class="element-heading">
-      <h6>Data Pengajuan Mutasi & Promosi Pegawai</h6>
+      <h6>Data Pengajuan Pegawai Baru</h6>
     </div>
   </div>
 
