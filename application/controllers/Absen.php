@@ -55,7 +55,7 @@ class Absen extends CI_Controller {
 		}
 
 		//---cek device---
-		if ($this->agent->is_mobile() && !$this->agent->is_tablet()) {
+		if ($this->agent->is_mobile()) {
 			$device="HP";
 		} else {
 			$device="PC";
@@ -66,6 +66,19 @@ class Absen extends CI_Controller {
 			// ]);
 			// exit;
 		}
+
+
+		// if ($this->agent->is_mobile() && !$this->agent->is_tablet()) {
+		// 	$device="HP";
+		// } else {
+		// 	$device="PC";
+
+		// 	// echo json_encode([
+		// 	// 	'status' => 'error',
+		// 	// 	'message' => $device." - Fitur Absensi Hanya Bisa Digunakan di Perangkat Mobile"
+		// 	// ]);
+		// 	// exit;
+		// }
 
 		// Ambil data JSON
 		$input = json_decode(file_get_contents('php://input'), true);
