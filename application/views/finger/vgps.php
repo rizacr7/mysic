@@ -31,97 +31,107 @@
   </div>
 </div>
 
-
 <script type="text/javascript">
-	var x = document.getElementById("demo");
-	
-	$(document).ready(function(){
-		<?php	if($_GET['loop'] == '1'){ ?>
-				getLocation();	
-		<?php	} ?>
-	})
+var map, marker, watchId;
+var loading = document.getElementById("loading");
+var info = document.getElementById("info");
+var gpsLocked = false; 
 
+$(document).ready(function(){
+    <?php if($_GET['loop'] == '1'){ ?>
+        startGPS();
+    <?php } ?>
+});
 
-	var x = document.getElementById("demo");
-	function getLocation() {
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(showPosition);
-	} else { 
-		x.innerHTML = "Geolocation is not supported by this browser.";
-	}
-	}
+function startGPS() {
 
-	function showPosition(position) {
-		var x = position.coords.longitude + ", " + position.coords.latitude;
-		
-		if(x != ""){
-				window.location.href='<?php echo base_url(); ?>index.php/finger/view_gps?loop=0&latlong='+x;
+    if (!navigator.geolocation) {
+        info.innerHTML = "Geolocation tidak didukung browser.";
+        return;
+    }
 
-		}else{
-				window.location.href='<?php echo base_url(); ?>index.php/finger/view_gps?loop=1';
-		}
-	}
-</script>
-<script>
-    var map, marker;
-    var loading = document.getElementById("loading");
-    var info = document.getElementById("info");
-
-    // tampilkan spinner saat mulai load lokasi
     loading.style.display = "block";
 
-    // Inisialisasi peta awal (pusat Indonesia)
-    map = L.map('map').setView([-2.5489, 118.0149], 5);
-
-    // Tambahkan layer peta OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap Contributors'
-    }).addTo(map);
-
-    // Ambil lokasi user
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else {
-        loading.style.display = "none";
-        info.innerHTML = "Geolocation tidak didukung browser.";
-    }
-
-    function showPosition(position) {
-        var lat = position.coords.latitude;
-        var lng = position.coords.longitude;
-
-        // sembunyikan spinner
-        loading.style.display = "none";
-
-        info.innerHTML = "Latitude: " + lat + " | Longitude: " + lng;
-
-        // Gerakkan peta ke lokasi user
-        map.setView([lat, lng], 17);
-
-        // Tambahkan marker
-        marker = L.marker([lat, lng]).addTo(map)
-            .bindPopup("<b>Lokasi Anda</b><br>Lat: " + lat + "<br>Lng: " + lng)
-            .openPopup();
-    }
-
-    function showError(error) {
-        loading.style.display = "none"; // sembunyikan spinner
-
-        switch(error.code) {
-            case error.PERMISSION_DENIED:
-                info.innerHTML = "Izin lokasi ditolak.";
-                break;
-            case error.POSITION_UNAVAILABLE:
-                info.innerHTML = "Lokasi tidak tersedia.";
-                break;
-            case error.TIMEOUT:
-                info.innerHTML = "Permintaan lokasi timeout.";
-                break;
-            default:
-                info.innerHTML = "Terjadi kesalahan mendeteksi lokasi.";
+    watchId = navigator.geolocation.watchPosition(
+        showPosition,
+        showError,
+        {
+            enableHighAccuracy: true,
+            timeout: 20000,
+            maximumAge: 0
         }
+    );
+}
+
+
+function showPosition(position) {
+
+    // Kalau sudah pernah dapat titik, jangan proses lagi
+    if (gpsLocked) return;
+
+    var lat = position.coords.latitude;
+    var lng = position.coords.longitude;
+    var acc = position.coords.accuracy;
+    loading.style.display = "none";
+
+    info.innerHTML = "Lat: " + lat + 
+                     " | Lng: " + lng + 
+                     " | Akurasi: ±" + Math.round(acc) + " m";
+
+    // Update map
+    if (!map) {
+        map = L.map('map').setView([lat, lng], 17);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap Contributors'
+        }).addTo(map);
+
+        marker = L.marker([lat, lng]).addTo(map);
+    } else {
+        map.setView([lat, lng], 17);
+        marker.setLatLng([lat, lng]);
     }
+
+    // Kalau akurasi sudah bagus
+    if (acc <= 75) {
+
+        gpsLocked = true; // tandai sudah dapat
+        navigator.geolocation.clearWatch(watchId); // 🛑 stop total
+        loading.style.display = "none";
+
+        console.log("GPS dihentikan. Titik terkunci.");
+    }
+}
+
+
+function showError(error) {
+
+    if (gpsLocked) return;
+
+    loading.style.display = "none";
+
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            info.innerHTML = "Izin lokasi ditolak.";
+            break;
+        case error.TIMEOUT:
+            info.innerHTML = "GPS timeout.";
+            break;
+        default:
+            info.innerHTML = "Terjadi kesalahan mendeteksi lokasi.";
+    }
+}
+
+
+function retryGPS() {
+    if (watchId) {
+        navigator.geolocation.clearWatch(watchId);
+    }
+    setTimeout(function(){
+        startGPS();
+    }, 3000);
+}
 </script>
 
 	

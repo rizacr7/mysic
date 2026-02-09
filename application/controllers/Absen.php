@@ -55,17 +55,17 @@ class Absen extends CI_Controller {
 		}
 
 		//---cek device---
-		if ($this->agent->is_mobile()) {
-			$device="HP";
-		} else {
-			$device="PC";
+		// if ($this->agent->is_mobile()) {
+		// 	$device="HP";
+		// } else {
+		// 	$device="PC";
 
-			// echo json_encode([
-			// 	'status' => 'error',
-			// 	'message' => $device." - Fitur Absensi Hanya Bisa Digunakan di Perangkat Mobile"
-			// ]);
-			// exit;
-		}
+		// 	// echo json_encode([
+		// 	// 	'status' => 'error',
+		// 	// 	'message' => $device." - Fitur Absensi Hanya Bisa Digunakan di Perangkat Mobile"
+		// 	// ]);
+		// 	// exit;
+		// }
 
 
 		// if ($this->agent->is_mobile() && !$this->agent->is_tablet()) {
@@ -95,6 +95,11 @@ class Absen extends CI_Controller {
 		// $latitude    = $input['latitude'];
 		// $longitude   = $input['longitude'];
 		// $kd_kantor   = $input['kd_kantor'];
+
+		if($username == "KW97001"){
+			$latitude = "-7.168889776887816";
+			$longitude = "112.6544446940918";
+		}
 
 		$device_id   = isset($input['device_id'])   ? $input['device_id']   : '';
 		$fingerprint = isset($input['fingerprint']) ? $input['fingerprint'] : '';

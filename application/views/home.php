@@ -213,7 +213,8 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     jam();
-    getLocation();
+    // getLocation();
+    startGPS();
   });
 
 function jam() {
@@ -273,7 +274,7 @@ function getLocation() {
         showError,
         {
             enableHighAccuracy: true, // ⚡ lebih cepat
-            timeout: 15000,             // ⏱ max 15 detik
+            timeout: 20000,             // ⏱ max 20 detik
             maximumAge: 60000          // ♻️ cache 1 menit
         }
     );
@@ -323,11 +324,111 @@ function showError(error) {
     x.innerHTML = msg;
 }
 
+//---gunakan watchposition---
+let watchId = null;
+let gpsLocked = false;
+let bestAccuracy = 9999;
 
+function startGPS() {
+    const x = document.getElementById("demo");
+    const loading = document.getElementById("loading");
 
-function daftarfaceid() {
-    window.location.href = "<?php echo base_url('index.php/finger/daftar_faceid'); ?>";
+    if (!navigator.geolocation) {
+        x.innerHTML = "Browser tidak mendukung GPS";
+        return;
+    }
+
+    loading.style.display = "block";
+    x.innerHTML = "Mengambil lokasi...";
+
+    watchId = navigator.geolocation.watchPosition(
+        handlePosition,
+        handleError,
+        {
+            enableHighAccuracy: true,
+            timeout: 30000, //max 30 detik
+            maximumAge: 0 // jangan pakai cache
+        }
+    );
 }
+
+function handlePosition(position) {
+
+    if (gpsLocked) return; // kalau sudah stop, abaikan
+
+    const x = document.getElementById("demo");
+    const loading = document.getElementById("loading");
+
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    const acc = position.coords.accuracy;
+
+    loading.style.display = "none";
+
+    if (acc < bestAccuracy) {
+
+        bestAccuracy = acc;
+
+        document.getElementById("lat").value = lat;
+        document.getElementById("long").value = lng;
+
+        x.innerHTML = `Koordinat Absensi: ${lat}, ${lng}`;
+        // x.innerHTML = `Koordinat Absensi: ${lat}, ${lng}<br>Akurasi: ±${Math.round(acc)} meter`;
+    }
+
+    if (acc <= 75) {
+        gpsLocked = true; // kunci
+        navigator.geolocation.clearWatch(watchId);
+        // x.innerHTML += "<br><b>Lokasi siap digunakan</b>";
+    }
+}
+
+function handleError(error) {
+
+    if (gpsLocked) return; // jangan retry kalau sudah stop
+
+    const x = document.getElementById("demo");
+    const loading = document.getElementById("loading");
+
+    loading.style.display = "none";
+
+    let msg = "";
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            msg = "Izin lokasi ditolak";
+            break;
+        case error.POSITION_UNAVAILABLE:
+            msg = "Lokasi tidak tersedia, aktifkan GPS";
+            break;
+        case error.TIMEOUT:
+            msg = "GPS timeout, mencoba ulang...";
+            retryGPS();
+            return;
+        default:
+            msg = "Gagal mengambil lokasi";
+    }
+
+    x.innerHTML = msg;
+}
+
+
+function retryGPS() {
+    if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+    }
+    bestAccuracy = 9999;
+
+    setTimeout(() => {
+        startGPS();
+    }, 5000); // retry setelah 5 detik
+}
+
+
+
+// function daftarfaceid() {
+//     window.location.href = "<?php echo base_url('index.php/finger/daftar_faceid'); ?>";
+// }
+
 function view_dt(){ window.location.href='<?php echo base_url(); ?>index.php/finger/view_dtfinger'; }
 
 function view_gps(){
@@ -415,6 +516,17 @@ async function cek_in() {
     const raw = getFingerprintRaw();
     const fingerprint = await sha256(raw);
 
+    // ✅ Tampilkan Loading
+    Swal.fire({
+        title: "Sedang Proses...",
+        text: "Mohon tunggu sebentar",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     fetch("<?php echo base_url("index.php/absen/proses_checkin"); ?>", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -428,6 +540,8 @@ async function cek_in() {
     })
     .then(res => res.json())
     .then(res => {
+        Swal.close();
+
           if (res.status === "success") {
             Swal.fire({
                 title: "Berhasil!",
@@ -439,7 +553,7 @@ async function cek_in() {
         }
         else{
             Swal.fire({
-                title: "Error!",
+                // title: res.message,
                 text: res.message,
                 icon: "error",
                 confirmButtonText: "OK"
@@ -447,6 +561,8 @@ async function cek_in() {
         }
     })
     .catch(() => {
+          Swal.close();
+
           Swal.fire({
               title: "Error!",
               text: "Gagal Mengirim Data",
@@ -469,6 +585,17 @@ async function cek_out() {
     const raw = getFingerprintRaw();
     const fingerprint = await sha256(raw);
 
+     // ✅ Tampilkan Loading
+    Swal.fire({
+        title: "Sedang Proses...",
+        text: "Mohon tunggu sebentar",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     fetch("<?php echo base_url("index.php/absen/proses_checkout"); ?>", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -482,6 +609,7 @@ async function cek_out() {
     })
     .then(res => res.json())
     .then(res => {
+          Swal.close();
           if (res.status === "success") {
             Swal.fire({
                 title: "Berhasil!",
@@ -501,6 +629,7 @@ async function cek_out() {
         }
     })
     .catch(() => {
+          Swal.close();
           Swal.fire({
               title: "Error!",
               text: "Gagal Mengirim Data",
