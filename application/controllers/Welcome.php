@@ -24,7 +24,7 @@ class Welcome extends CI_Controller {
 		$this->load->model('m_login');
 		$this->load->model('m_finger');
 		$this->load->model('func_global');
-		$this->db_undian = $this->load->database("db_undian", TRUE);
+// 		$this->db_undian = $this->load->database("db_undian", TRUE);
 	}
 	
 	public function index()
@@ -100,6 +100,9 @@ class Welcome extends CI_Controller {
     }
 	
 	function sukses(){
+	    // Set timezone ke UTC+7 (Jakarta)
+        date_default_timezone_set('Asia/Jakarta');
+    
 		$tglNow = $this->func_global->dsql_tglfull(date("Y-m-d"));
 		$hari = date("D");
 		$today = date("Y-m-d");
@@ -139,18 +142,10 @@ class Welcome extends CI_Controller {
 			redirect('Welcome/index');
 		}
 		else{
-			if($today <= "2026-01-31"){
-				$this->load->view('general/header');	
-				$this->load->view('general/sidebar');	
-				$this->load->view('home_undian',$data);	
-				$this->load->view('general/footer');	
-			}
-			else{
-				$this->load->view('general/header');	
-				$this->load->view('general/sidebar');	
-				$this->load->view('home',$data);	
-				$this->load->view('general/footer');	
-			}
+			$this->load->view('general/header');	
+			$this->load->view('general/sidebar');	
+			$this->load->view('home',$data);	
+			$this->load->view('general/footer');	
 		}
 	}
 
@@ -159,31 +154,31 @@ class Welcome extends CI_Controller {
 		redirect('Welcome/index');
 	}
 
-	function undangansic(){
-		$data = array(
-			'username' => $this->session->userdata('username'),
-			'nama' => $this->session->userdata('nama'),
-			'kantor' => $this->session->userdata('kantor'),
-			'nm_unit' => $this->session->userdata('nm_unit')
-		);
+// 	function undangansic(){
+// 		$data = array(
+// 			'username' => $this->session->userdata('username'),
+// 			'nama' => $this->session->userdata('nama'),
+// 			'kantor' => $this->session->userdata('kantor'),
+// 			'nm_unit' => $this->session->userdata('nm_unit')
+// 		);
 
-		$this->load->view('general/header');	
-		$this->load->view('general/sidebar');	
-		$this->load->view('general/undangansic',$data);	
-		$this->load->view('general/footer');
-	}
+// 		$this->load->view('general/header');	
+// 		$this->load->view('general/sidebar');	
+// 		$this->load->view('general/undangansic',$data);	
+// 		$this->load->view('general/footer');
+// 	}
 
-	function tukarhadiah(){
-		$data = array(
-			'username' => $this->session->userdata('username'),
-			'nama' => $this->session->userdata('nama'),
-			'kantor' => $this->session->userdata('kantor'),
-			'nm_unit' => $this->session->userdata('nm_unit')
-		);
+// 	function tukarhadiah(){
+// 		$data = array(
+// 			'username' => $this->session->userdata('username'),
+// 			'nama' => $this->session->userdata('nama'),
+// 			'kantor' => $this->session->userdata('kantor'),
+// 			'nm_unit' => $this->session->userdata('nm_unit')
+// 		);
 
-		$this->load->view('general/header');	
-		$this->load->view('general/sidebar');	
-		$this->load->view('general/tukarhadiah',$data);	
-		$this->load->view('general/footer');
-	}
+// 		$this->load->view('general/header');	
+// 		$this->load->view('general/sidebar');	
+// 		$this->load->view('general/tukarhadiah',$data);	
+// 		$this->load->view('general/footer');
+// 	}
 }
