@@ -54,32 +54,6 @@ class Absen extends CI_Controller {
 			exit;
 		}
 
-		//---cek device---
-		// if ($this->agent->is_mobile()) {
-		// 	$device="HP";
-		// } else {
-		// 	$device="PC";
-
-		// 	// echo json_encode([
-		// 	// 	'status' => 'error',
-		// 	// 	'message' => $device." - Fitur Absensi Hanya Bisa Digunakan di Perangkat Mobile"
-		// 	// ]);
-		// 	// exit;
-		// }
-
-
-		// if ($this->agent->is_mobile() && !$this->agent->is_tablet()) {
-		// 	$device="HP";
-		// } else {
-		// 	$device="PC";
-
-		// 	// echo json_encode([
-		// 	// 	'status' => 'error',
-		// 	// 	'message' => $device." - Fitur Absensi Hanya Bisa Digunakan di Perangkat Mobile"
-		// 	// ]);
-		// 	// exit;
-		// }
-
 		// Ambil data JSON
 		$input = json_decode(file_get_contents('php://input'), true);
 		if (!$input) {
@@ -96,11 +70,6 @@ class Absen extends CI_Controller {
 		// $longitude   = $input['longitude'];
 		// $kd_kantor   = $input['kd_kantor'];
 
-		if($username == "KW97001"){
-			$latitude = "-7.168889776887816";
-			$longitude = "112.6544446940918";
-		}
-
 		$device_id   = isset($input['device_id'])   ? $input['device_id']   : '';
 		$fingerprint = isset($input['fingerprint']) ? $input['fingerprint'] : '';
 		$latitude    = isset($input['latitude'])    ? $input['latitude']    : '';
@@ -111,6 +80,7 @@ class Absen extends CI_Controller {
 		$lat_lon_in = $latitude.",".$longitude;
 		$proyekcurah = 0;
 		$cekjarak = 1;
+		$device = "HP";
 
 		$tgl_now = date('Y-m-d');
 		$checkin = date('H:i:s');
