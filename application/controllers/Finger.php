@@ -111,7 +111,7 @@ class Finger extends CI_Controller {
 		$paramdt['bulan'] = $bulan;
 		$paramdt['tahun'] = $tahun;
 
-		$cekpegawai = "select a.*,b.nm_unit,b.kd_kantor,a.no_peg_lm from mas_peg_backup a left join m_unit b on a.kd_unit = b.kd_unit where a.no_peg = '$no_peg'";
+		$cekpegawai = "select a.*,b.nm_unit,b.kd_kantor,a.no_peg_lm from mas_peg a left join m_unit b on a.kd_unit = b.kd_unit where a.no_peg = '$no_peg'";
 		$rpeg = $this->db_hrdonline->query($cekpegawai)->result();
 		$nama = $rpeg[0]->na_peg;
 		$nm_unit = $rpeg[0]->nm_unit;
@@ -158,7 +158,13 @@ class Finger extends CI_Controller {
 		
 			$namahari = date('l', strtotime($tgl_dsql));
 			
-			$cekfinger = "select * from t_finger_mobile where no_peg = '$no_peg' and tanggal = '$tgl_dsql'";
+			if($no_peg_lm == ""){
+				$wherenopeg = "AND no_peg = '$no_peg'";
+			}
+			else{
+				$wherenopeg = "AND no_peg IN ('$no_peg','$no_peg_lm')";
+			}
+			$cekfinger = "select * from t_finger_mobile where tanggal = '$tgl_dsql' $wherenopeg";
 			
 			$rdt = $this->db_hrdonline->query($cekfinger)->num_rows();
 			if($rdt == 0){
@@ -415,7 +421,7 @@ class Finger extends CI_Controller {
 			}
 
 			//---izin pegawai ----
-			$izin = $this->db_hrdonline->query("SELECT * FROM t_izin WHERE no_peg = '$no_peg' AND tgl_izin = '$tgl_dsql' AND status_hapus = 0 AND flag_app=1")->result();
+			$izin = $this->db_hrdonline->query("SELECT * FROM t_izin WHERE no_peg ='$no_peg' AND tgl_izin = '$tgl_dsql' AND status_hapus = 0 AND flag_app=1")->result();
 			$izinPeg = "";
 			if(count($izin) > 0){
 				$nmIzin = $izin[0]->keterangan;
