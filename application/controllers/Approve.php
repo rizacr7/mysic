@@ -531,7 +531,7 @@ class Approve extends CI_Controller {
 				$rdt = $this->db->query($qdata);
 				
 				// --- insert t_trackdoc sifina ---
-				$insert = "insert ignore into db_fina.t_track_doc set bukti_ph='$bukti_pjk',no_document = '$bukti_pjk',ajuan_dari='SDM',DoUval='1',tglDoUval=NOW()";
+				$insert = "INSERT INTO db_fina.t_track_doc set bukti_ph='$bukti_pjk',no_document = '$bukti_pjk',ajuan_dari='SDM',DoUval='1',tglDoUval=NOW()";
 				$result = $this->db->query($insert);
 				
 			}
