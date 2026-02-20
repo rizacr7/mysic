@@ -1129,7 +1129,7 @@ class Approve extends CI_Controller {
 		$curl  = curl_init();
 
 		curl_setopt_array($curl, [
-			CURLOPT_URL            => 'https://sipandu.kwsg.co.id/upload/do_upload_signature',
+			CURLOPT_URL            => 'https://sipandu.sic.co.id/upload/do_upload_signature',
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_TIMEOUT        => 60,
 			CURLOPT_POST           => true,
