@@ -339,7 +339,7 @@ class Finger extends CI_Controller {
 				$keterangan = "LIBUR";
 			}
 			else{
-				if($daftar_hari[$namahari] == "Sabtu" && $kd_kantor == "K0001" || $daftar_hari[$namahari] == "Sabtu" && $kd_kantor == "K0002"){
+				if($daftar_hari[$namahari] == "Sabtu" && $kd_kantor == "K0001" || $daftar_hari[$namahari] == "Sabtu" && $kd_kantor == "K0002" || $daftar_hari[$namahari] == "Sabtu" && $kd_kantor == "K0073"){
 					$keterangan = "LIBUR";
 				}
 				else{
