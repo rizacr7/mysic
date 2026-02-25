@@ -315,7 +315,12 @@ class Finger extends CI_Controller {
 					$tgl_akhir = $dtFinger[0]->TGL_AKHIR;
 		
 					if($kode == "SP"){
-						$chekcin = "SPPD";
+						if($daftar_hari[$namahari] == "Minggu"){
+							$chekcin = "LIBUR";
+						}	
+						else{
+							$chekcin = "SPPD";
+						}
 					}
 					else{
 						if($dtFinger[0]->kd_cuti == "DC"){
@@ -324,8 +329,23 @@ class Finger extends CI_Controller {
 						else if($dtFinger[0]->kd_cuti == "DP"){
 							$chekcin = "DISPENSASI";
 						}
-						else{	
-							$chekcin = "CUTI";
+						else{
+							if($daftar_hari[$namahari] == "Minggu"){
+								$chekcin = "LIBUR";
+							}	
+							else{
+								if($kd_kantor == "K0001" || $kd_kantor == "K0002" || $kd_kantor == "K0073"){
+									if($daftar_hari[$namahari] == "Sabtu"){
+										$chekcin = "LIBUR";
+									}
+									else{
+										$chekcin = "CUTI";
+									}
+								}
+								else{
+									$chekcin = "CUTI";
+								}
+							}
 						}
 					}	
 					
