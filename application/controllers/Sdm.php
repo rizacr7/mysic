@@ -271,10 +271,11 @@ class Sdm extends CI_Controller {
 		$jmlama_libur=0;
 		
 		// --- cek kd job ---
-		$query="SELECT a.*,b.hari_kerja FROM mas_peg a LEFT JOIN m_unit b ON a.kd_unit = b.kd_unit WHERE a.no_peg = '$no_peg'";
+		$query="SELECT a.*,b.hari_kerja,b.kd_kantor FROM mas_peg a LEFT JOIN m_unit b ON a.kd_unit = b.kd_unit WHERE a.no_peg = '$no_peg'";
 		$dt = $this->db_hrdonline->query($query)->result();
 		$kd_job = $dt[0]->kd_job;
 		$hari_kerja = $dt[0]->hari_kerja;
+		$kd_kantor = $dt[0]->kd_kantor;
 		
 		if($tgl_awal == $tgl_akhir){
 			$lama = 1;
@@ -305,7 +306,7 @@ class Sdm extends CI_Controller {
 	
 					$hari = date("D",strtotime($tgl2));
 					
-					if($hari_kerja == 5){
+					if($kd_kantor == "K0001" || $kd_kantor == "K0002" || $kd_kantor == "K0073"){
 						if($hari == "Sun" || $hari == "Sat"){
 							$jmlama++;
 						}
