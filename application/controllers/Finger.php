@@ -238,7 +238,22 @@ class Finger extends CI_Controller {
 							$chekcin = "DISPENSASI";
 						}
 						else{	
-							$chekcin = "CUTI";
+							if($daftar_hari[$namahari] == "Minggu"){
+								$chekcin = "LIBUR";
+							}	
+							else{
+								if($kd_kantor == "K0001" || $kd_kantor == "K0002" || $kd_kantor == "K0073"){
+									if($daftar_hari[$namahari] == "Sabtu"){
+										$chekcin = "LIBUR";
+									}
+									else{
+										$chekcin = "CUTI";
+									}
+								}
+								else{
+									$chekcin = "CUTI";
+								}
+							}
 						}
 						
 					}	
