@@ -125,7 +125,7 @@ class Sdm_model extends CI_Model{
 		}
 		else if($kdjab == "3" || $kd_level == "2"){
 			//--ass.manager---
-			$whereunit = " AND c.kd_unit = '".$kd_unit."' AND SUBSTR(a.kd_jab,1,1) >= '4' AND a.no_peg NOT IN ('$no_peg')";
+			$whereunit = " AND c.kd_unit = '".$kd_unit."' AND (SUBSTR(a.kd_jab,1,1) >= '4' OR a.kd_jab > 91) AND a.no_peg NOT IN ('$no_peg')";
 		}
 
 		$query = "Select a.*,b.na_peg from t_izin a 
@@ -160,7 +160,7 @@ class Sdm_model extends CI_Model{
 		}
 		else if($kdjab == "3" || $kd_level == "2"){
 			//--ass.manager---
-			$whereunit = " AND c.kd_unit = '".$kd_unit."' AND SUBSTR(a.kd_jab,1,1) >= '4' AND a.no_peg NOT IN ('$no_peg')";
+			$whereunit = " AND c.kd_unit = '".$kd_unit."' AND (SUBSTR(a.kd_jab,1,1) >= '4' OR a.kd_jab > 91) AND a.no_peg NOT IN ('$no_peg')";
 		}
 
 		$query = "Select a.*,b.na_peg from t_izin a 
