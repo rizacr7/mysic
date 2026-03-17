@@ -217,6 +217,17 @@ function approveSelected() {
         confirmButtonText: 'Ya, Approve'
     }).then((result) => {
         if (result.isConfirmed) {
+            // ✅ Tampilkan Loading
+            Swal.fire({
+                title: "Sedang Proses...",
+                text: "Mohon tunggu sebentar",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
             $.ajax({
                 url: "<?php echo base_url(); ?>index.php/approve/approve_multi_pjksppd",
                 type: "POST",
