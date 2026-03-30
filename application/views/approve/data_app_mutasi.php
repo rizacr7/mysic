@@ -95,8 +95,12 @@
                           <table class="table table-sm table-borderless mb-0">
                             <tbody>
                               <tr>
-                                <td class="text-muted" style="width:40%">Tgl. App MR</td>
+                                <td class="text-muted" style="width:40%">Tgl. App MR Asal</td>
                                 <td class="fw-medium">: <?php echo $this->func_global->dsql_tgl($val['tgl_app_unit']) ?></td>
+                              </tr>
+                              <tr>
+                                <td class="text-muted" style="width:40%">Tgl. App MR Tujuan</td>
+                                <td class="fw-medium">: <?php echo $this->func_global->dsql_tgl($val['tgl_app_tujuan']) ?></td>
                               </tr>
                               <tr>
                                 <td class="text-muted">Tgl. App Kadiv</td>
