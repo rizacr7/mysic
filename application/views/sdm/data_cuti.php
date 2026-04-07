@@ -33,6 +33,10 @@
                     <i class='bi bi-trash'></i> Hapus
                 </button>"
               : "";
+            
+            $label_app = ($val['status_approve'] == '1')
+                  ? "<span class='badge bg-success'>Approved</span>"
+                  : "<span class='badge bg-danger'>Pending</span>";
         ?>
 
         <!-- CARD ITEM -->
@@ -44,6 +48,7 @@
               <strong><?php echo $val['no_bukti']; ?></strong><br>
               <small class="text-muted"><?php echo $val['na_peg']; ?></small>
             </div>
+            <?php echo $label_app; ?>
           </div>
 
           <!-- BODY -->
