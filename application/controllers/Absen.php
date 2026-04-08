@@ -115,7 +115,7 @@ class Absen extends CI_Controller {
 		$kd_job = $qdt[0]->kd_job;
 		$deviceid_maspeg = $qdt[0]->device_id;
 
-		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105"){
+		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105" || $username == "KW97044"){
 			$proyekcurah = 1;
 		}
 
@@ -352,7 +352,7 @@ class Absen extends CI_Controller {
 		$qdt = $this->db_hrdonline->query($qmaspeg)->result();
 		$kd_jab = $qdt[0]->kd_jab;
 		$kd_job = $qdt[0]->kd_job;
-		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105"){
+		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105" || $username == "KW97044"){
 			$proyekcurah = 1;
 		}
 
