@@ -26,6 +26,7 @@ class Approve extends CI_Controller {
 		$this->load->model('func_global');
 		$this->db_hrdonline = $this->load->database("hrdonline", TRUE);
 		$this->db_pbb = $this->load->database("pbb", TRUE);
+		$this->db_fina = $this->load->database("db_fina", TRUE);
 
 		if($this->session->userdata('username') == ""){
 			redirect('Welcome/index');
@@ -528,11 +529,11 @@ class Approve extends CI_Controller {
 			if($KET_KAS == 1){
 				//---kas kantor pusat ---
 				$qdata = "DELETE from db_fina.t_track_doc where no_document = '$bukti_pjk'";
-				$rdt = $this->db->query($qdata);
+				$rdt = $this->db_fina->query($qdata);
 				
 				// --- insert t_trackdoc sifina ---
-				$insert = "insert ignore into db_fina.t_track_doc set bukti_ph='$bukti_pjk',no_document = '$bukti_pjk',ajuan_dari='SDM',DoUval='1',tglDoUval=NOW()";
-				$result = $this->db->query($insert);
+				$insertTrack = "insert into db_fina.t_track_doc set bukti_ph='$bukti_pjk',no_document = '$bukti_pjk',ajuan_dari='SDM',DoUval='1',tglDoUval=NOW()";
+				$result = $this->db_fina->query($insertTrack);
 				
 			}
 			else{
