@@ -109,13 +109,14 @@ class Absen extends CI_Controller {
 		}
 
 		// --- jab ---
-		$qmaspeg = "select kd_jab,kd_job,kd_unit,device_id from mas_peg where no_peg = '$username'";
+		$qmaspeg = "select kd_jab,kd_job,kd_unit,device_id,check_all from mas_peg where no_peg = '$username'";
 		$qdt = $this->db_hrdonline->query($qmaspeg)->result();
 		$kd_jab = $qdt[0]->kd_jab;
 		$kd_job = $qdt[0]->kd_job;
 		$deviceid_maspeg = $qdt[0]->device_id;
+		$check_all = $qdt[0]->check_all;
 
-		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105" || $username == "KW97044"){
+		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105" || $username == "KW97044" || $check_all == 1){
 			$proyekcurah = 1;
 		}
 
@@ -348,11 +349,12 @@ class Absen extends CI_Controller {
 		$radius          = $rdt->radius;
 
 		// --- jab ---
-		$qmaspeg = "select kd_jab,kd_job,kd_unit from mas_peg where no_peg = '$username'";
+		$qmaspeg = "select kd_jab,kd_job,kd_unit,check_all from mas_peg where no_peg = '$username'";
 		$qdt = $this->db_hrdonline->query($qmaspeg)->result();
 		$kd_jab = $qdt[0]->kd_jab;
 		$kd_job = $qdt[0]->kd_job;
-		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105" || $username == "KW97044"){
+		$check_all = $qdt[0]->check_all;
+		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105" || $username == "KW97044" || $check_all == 1){
 			$proyekcurah = 1;
 		}
 
