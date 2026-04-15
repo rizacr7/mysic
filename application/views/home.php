@@ -136,6 +136,42 @@
             </div>
           </div>
 
+          <?php 
+          date_default_timezone_set('Asia/Jakarta');
+          $jam = date('H:i:s');
+          //--khusus hari jumat dan bagian wfh---
+
+          if(date("N") == 5 && $flag_wfh == '1' && $ket_bagian == 'f' && $jam >= '13:00:00' && $jam <= '13:30:00'){
+              //--khusus keuangan piutang dan logistik--
+              if($kd_bagian == "90E0" || $kd_bagian == "90S0" || $kd_bagian == "90O0"){
+                if($flagwfo == 1){
+                  $cekjarak = 1;
+                }
+                else{
+                  $cekjarak = 0;
+                }
+              }
+              else{
+                $cekjarak = 0;
+              }
+              
+              if($cekjarak == 0){
+          ?>
+           <div class="col-12 col-sm-12 col-lg-12">
+            <div class="card single-product-card" onclick="cek_in_mid()" style="background-color:#0B8FF4">
+              <div class="card-body p-3">
+                <div class="element-heading-wrapper">
+                  <i class="bi bi-box-arrow-in-up"></i>
+                  <div class="heading-text">
+                    <h6 class="mb-1"><font color="white">CheckIn Middle</font></h6>
+                    <span><font color="white">Absen Masuk</font></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> 
+          <?php }}?>
+
           <!-- Single Top Product Card -->
           <div class="col-6 col-sm-4 col-lg-3">
             <div class="card single-product-card" onclick="view_dt()">
@@ -528,6 +564,75 @@ async function cek_in() {
     });
 
     fetch("<?php echo base_url("index.php/absen/proses_checkin"); ?>", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            device_id: device_id,      // ✅ dikirim
+            fingerprint: fingerprint,  // ✅ dikirim
+            latitude: latitude,
+            longitude: longitude,
+            kd_kantor: kd_kantor
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        Swal.close();
+
+          if (res.status === "success") {
+            Swal.fire({
+                title: "Berhasil!",
+                text: res.message,
+                icon: "success",
+                confirmButtonText: "OK"
+            });
+          
+        }
+        else{
+            Swal.fire({
+                // title: res.message,
+                text: res.message,
+                icon: "error",
+                confirmButtonText: "OK"
+            });
+        }
+    })
+    .catch(() => {
+          Swal.close();
+
+          Swal.fire({
+              title: "Error!",
+              text: "Gagal Mengirim Data",
+              icon: "error",
+              confirmButtonText: "OK"
+          });
+    });
+}
+
+async function cek_in_mid() {
+    const status = document.getElementById("status");
+    const kd_kantor = document.getElementById("kd_kantor").value;
+    const latitude = document.getElementById("lat").value;
+    const longitude = document.getElementById("long").value;
+    
+    // ✅ DEVICE ID (LocalStorage)
+    const device_id = getDeviceId();
+
+    // 🔐 Fingerprint
+    const raw = getFingerprintRaw();
+    const fingerprint = await sha256(raw);
+
+    // ✅ Tampilkan Loading
+    Swal.fire({
+        title: "Sedang Proses...",
+        text: "Mohon tunggu sebentar",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    fetch("<?php echo base_url("index.php/absen/proses_checkin_mid"); ?>", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -24,6 +24,7 @@ class Welcome extends CI_Controller {
 		$this->load->model('m_login');
 		$this->load->model('m_finger');
 		$this->load->model('func_global');
+		$this->db_hrdonline = $this->load->database("hrdonline", TRUE);
 // 		$this->db_undian = $this->load->database("db_undian", TRUE);
 	}
 	
@@ -106,6 +107,7 @@ class Welcome extends CI_Controller {
 		$tglNow = $this->func_global->dsql_tglfull(date("Y-m-d"));
 		$hari = date("D");
 		$today = date("Y-m-d");
+		$username = $this->session->userdata('username');
 
 		if($hari == "Sun"){
 			$hari_ini = "Minggu";
@@ -128,20 +130,46 @@ class Welcome extends CI_Controller {
 		else if($hari == "Sat"){
 			$hari_ini = "Sabtu";
 		}
+
+
 		
-		$data = array(
-			'username' => $this->session->userdata('username'),
-			'nama' => $this->session->userdata('nama'),
-			'kantor' => $this->session->userdata('kantor'),
-			'nm_unit' => $this->session->userdata('nm_unit'),
-			'tglnow' => $tglNow,
-			'hari' => $hari_ini,
-		);
+
+		
 		
 		if($this->session->userdata('username') == ""){
 			redirect('Welcome/index');
 		}
 		else{
+
+			$qmaspeg = "SELECT a.kd_jab,a.kd_job,a.kd_unit,a.device_id,a.check_all,c.`ket_bagian`,c.`flag_wfh`,a.flagwfo,b.kd_bagian FROM mas_peg a
+			LEFT JOIN m_unit b ON a.`kd_unit` = b.kd_unit
+			LEFT JOIN m_bagian c ON b.`kd_bagian` = c.`kd_bagian`
+			WHERE a.no_peg = '".$username."'";
+			
+			$qdt = $this->db_hrdonline->query($qmaspeg)->result();
+			$kd_jab = $qdt[0]->kd_jab;
+			$kd_job = $qdt[0]->kd_job;
+			$deviceid_maspeg = $qdt[0]->device_id;
+			$check_all = $qdt[0]->check_all;
+			$ket_bagian = $qdt[0]->ket_bagian;
+			$flag_wfh = $qdt[0]->flag_wfh;
+			$flagwfo = $qdt[0]->flagwfo;
+			$kd_bagian = $qdt[0]->kd_bagian;
+
+			
+			$data = array(
+				'username' => $this->session->userdata('username'),
+				'nama' => $this->session->userdata('nama'),
+				'kantor' => $this->session->userdata('kantor'),
+				'nm_unit' => $this->session->userdata('nm_unit'),
+				'tglnow' => $tglNow,
+				'hari' => $hari_ini,
+				'flag_wfh' => $flag_wfh,
+				'ket_bagian' => $ket_bagian,
+				'flagwfo' => $flagwfo,
+				'kd_bagian' => $kd_bagian,
+			);
+			
 			$this->load->view('general/header');	
 			$this->load->view('general/sidebar');	
 			$this->load->view('home',$data);	
