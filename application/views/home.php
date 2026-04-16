@@ -140,8 +140,8 @@
           date_default_timezone_set('Asia/Jakarta');
           $jam = date('H:i:s');
           //--khusus hari jumat dan bagian wfh---
-          if(date("N") == 4 && $flag_wfh == '1' && $ket_bagian == 'f' && $jam >= '10:00:00' && $jam <= '13:30:00'){
-          // if(date("N") == 5 && $flag_wfh == '1' && $ket_bagian == 'f' && $jam >= '13:00:00' && $jam <= '13:30:00'){
+          // if(date("N") == 4 && $flag_wfh == '1' && $ket_bagian == 'f' && $jam >= '13:00:00' && $jam <= '13:30:00'){
+          if(date("N") == 5 && $flag_wfh == '1' && $ket_bagian == 'f' && $jam >= '13:00:00' && $jam <= '13:30:00'){
               //--khusus keuangan piutang dan logistik--
               if($kd_bagian == "90E0" || $kd_bagian == "90S0" || $kd_bagian == "90O0"){
                 if($flagwfo == 1){
