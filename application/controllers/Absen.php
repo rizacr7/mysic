@@ -443,10 +443,10 @@ class Absen extends CI_Controller {
 				}
 			}
 			else{
-				if($checkin > '14:00:00'){
+				if($checkin < '13:00:00' || $checkin > '13:30:00'){
 					echo json_encode([
 						'status' => 'error',
-						'message' => 'Absen Middle Maksimal Jam 14.00'
+						'message' => 'Absen Middle Jam 13.00 s.d 13.30'
 					]);
 					exit;
 				}
@@ -495,14 +495,23 @@ class Absen extends CI_Controller {
 			}
 		}
 		else{
-			$update = "update t_finger_mobile set midday='$checkin' where no_peg = '$username' and tanggal='$tgl_now'";
-			$this->db_hrdonline->query($update);
+			if($checkin < '13:00:00' || $checkin > '13:30:00'){
+				echo json_encode([
+					'status' => 'error',
+					'message' => 'Absen Middle Jam 13.00 s.d 13.30'
+				]);
+				exit;
+			}
+			else{
+				$update = "update t_finger_mobile set midday='$checkin' where no_peg = '$username' and tanggal='$tgl_now'";
+				$this->db_hrdonline->query($update);
 
-			echo json_encode([
-				'status' => 'success',
-				'message' => 'Absen Middle Berhasil!'
-			]);
-			exit;
+				echo json_encode([
+					'status' => 'success',
+					'message' => 'Absen Middle Sukses!'
+				]);
+				exit;
+			}
 		}
 		
 	}
