@@ -154,8 +154,12 @@
               else{
                 $cekjarak = 0;
               }
+          }
+          else if(date("N") == 5 && $flagwfo == 0){
+            $cekjarak = 0;
+          }
               
-              if($cekjarak == 0){
+          if($cekjarak == 0){
           ?>
            <div class="col-12 col-sm-12 col-lg-12">
             <div class="card single-product-card" onclick="cek_in_mid()" style="background-color:#0B8FF4">
@@ -170,7 +174,7 @@
               </div>
             </div>
           </div> 
-          <?php }}?>
+          <?php }?>
 
           <!-- Single Top Product Card -->
           <div class="col-6 col-sm-4 col-lg-3">

@@ -164,6 +164,9 @@ class Absen extends CI_Controller {
 				$cekjarak = 0;
 			}
 		}
+		else if(date("N") == 5 && $flagwfo == 0){
+			$cekjarak = 0;
+		}
 
 		//---khusus manager kadiv dan curah ----
 		if($kd_jab < 30 || $kd_jab == 102 || $proyekcurah == "1"){
@@ -345,7 +348,7 @@ class Absen extends CI_Controller {
 		}
 
 		// --- jab ---
-		$qmaspeg = "SELECT a.kd_jab,a.kd_job,a.kd_unit,a.device_id,a.check_all,c.`ket_bagian`,c.`flag_wfh` FROM mas_peg a
+		$qmaspeg = "SELECT a.kd_jab,a.kd_job,a.kd_unit,a.device_id,a.check_all,c.`ket_bagian`,c.`flag_wfh`,a.`flagwfo` FROM mas_peg a
 		LEFT JOIN m_unit b ON a.`kd_unit` = b.kd_unit
 		LEFT JOIN m_bagian c ON b.`kd_bagian` = c.`kd_bagian`
 		WHERE a.no_peg = '$username'";
@@ -356,6 +359,7 @@ class Absen extends CI_Controller {
 		$check_all = $qdt[0]->check_all;
 		$ket_bagian = $qdt[0]->ket_bagian;
 		$flag_wfh = $qdt[0]->flag_wfh;
+		$flagwfo = $qdt[0]->flagwfo;
 
 		if($username == "KW97011" || $username == "KW08013" || $username == "KW98105" || $username == "KW97044" || $check_all == 1){
 			$proyekcurah = 1;
@@ -391,6 +395,9 @@ class Absen extends CI_Controller {
 
 		//---khusus fungsional hari jumat ----
 		if(date("N") == 5 && $flag_wfh == 1 && $ket_bagian == "f"){
+			$cekjarak = 0;
+		}
+		else if(date("N") == 5 && $flagwfo == 0){
 			$cekjarak = 0;
 		}
 
@@ -638,6 +645,9 @@ class Absen extends CI_Controller {
 			else{
 				$cekjarak = 0;
 			}
+		}
+		else if(date("N") == 5 && $flagwfo == 0){
+			$cekjarak = 0;
 		}
 		//---khusus manager kadiv dan curah ----
 		if($kd_jab < 30 || $kd_jab == 102 || $proyekcurah == "1"){
