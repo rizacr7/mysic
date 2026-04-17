@@ -139,6 +139,7 @@
           <?php 
           date_default_timezone_set('Asia/Jakarta');
           $jam = date('H:i:s');
+          $cekjarak=1;
           //--khusus hari jumat dan bagian wfh---
           // if(date("N") == 4 && $flag_wfh == '1' && $ket_bagian == 'f' && $jam >= '13:00:00' && $jam <= '13:30:00'){
           if(date("N") == 5 && $flag_wfh == '1' && $ket_bagian == 'f'){
