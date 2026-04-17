@@ -150,21 +150,21 @@ class Absen extends CI_Controller {
 		$param['longitude'] = $longitude;
 		$meters = $this->absensi_model->hitungradius($param);
 		//---khusus fungsional hari jumat ----
-		if(date("N") == 5 && $flag_wfh == 1 && $ket_bagian == "f"){
-			//---khusus keuangan piutang dan logistik
-			if($kd_bagian == "90E0" || $kd_bagian == "90S0" || $kd_bagian == "90O0"){
-				if($flagwfo == 1){
-					$cekjarak = 1;
-				}
-				else{
-					$cekjarak = 0;
-				}
-			}
-			else{
-				$cekjarak = 0;
-			}
-		}
-		else if(date("N") == 5 && $flagwfo == 0){
+		// if(date("N") == 5 && $flag_wfh == 1 && $ket_bagian == "f"){
+		// 	//---khusus keuangan piutang dan logistik
+		// 	if($kd_bagian == "90E0" || $kd_bagian == "90S0" || $kd_bagian == "90O0"){
+		// 		if($flagwfo == 1){
+		// 			$cekjarak = 1;
+		// 		}
+		// 		else{
+		// 			$cekjarak = 0;
+		// 		}
+		// 	}
+		// 	else{
+		// 		$cekjarak = 0;
+		// 	}
+		// }
+		if(date("N") == 5 && $flagwfo == 0){
 			$cekjarak = 0;
 		}
 
@@ -394,10 +394,10 @@ class Absen extends CI_Controller {
 		}
 
 		//---khusus fungsional hari jumat ----
-		if(date("N") == 5 && $flag_wfh == 1 && $ket_bagian == "f"){
-			$cekjarak = 0;
-		}
-		else if(date("N") == 5 && $flagwfo == 0){
+		// if(date("N") == 5 && $flag_wfh == 1 && $ket_bagian == "f"){
+		// 	$cekjarak = 0;
+		// }
+		if(date("N") == 5 && $flagwfo == 0){
 			$cekjarak = 0;
 		}
 
@@ -632,21 +632,21 @@ class Absen extends CI_Controller {
 		$meters = $this->absensi_model->hitungradius($param);
 
 		//---khusus fungsional hari jumat ----
-		if(date("N") == 5 && $flag_wfh == 1 && $ket_bagian == "f"){
-			//---khusus keuangan piutang dan logistik
-			if($kd_bagian == "90E0" || $kd_bagian == "90S0" || $kd_bagian == "90O0"){
-				if($flagwfo == 1){
-					$cekjarak = 1;
-				}
-				else{
-					$cekjarak = 0;
-				}
-			}
-			else{
-				$cekjarak = 0;
-			}
-		}
-		else if(date("N") == 5 && $flagwfo == 0){
+		// if(date("N") == 5 && $flag_wfh == 1 && $ket_bagian == "f"){
+		// 	//---khusus keuangan piutang dan logistik
+		// 	if($kd_bagian == "90E0" || $kd_bagian == "90S0" || $kd_bagian == "90O0"){
+		// 		if($flagwfo == 1){
+		// 			$cekjarak = 1;
+		// 		}
+		// 		else{
+		// 			$cekjarak = 0;
+		// 		}
+		// 	}
+		// 	else{
+		// 		$cekjarak = 0;
+		// 	}
+		// }
+		if(date("N") == 5 && $flagwfo == 0){
 			$cekjarak = 0;
 		}
 		//---khusus manager kadiv dan curah ----
