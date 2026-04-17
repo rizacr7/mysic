@@ -111,7 +111,10 @@ class Finger extends CI_Controller {
 		$paramdt['bulan'] = $bulan;
 		$paramdt['tahun'] = $tahun;
 
-		$cekpegawai = "select a.*,b.nm_unit,b.kd_kantor,a.no_peg_lm from mas_peg a left join m_unit b on a.kd_unit = b.kd_unit where a.no_peg = '$no_peg'";
+		$cekpegawai = "select a.*,b.nm_unit,b.kd_kantor,a.no_peg_lm,c.ket_bagian from mas_peg a 
+		left join m_unit b on a.kd_unit = b.kd_unit 
+		left join m_bagian c on b.kd_bagian = c.kd_bagian
+		where a.no_peg = '$no_peg'";
 		$rpeg = $this->db_hrdonline->query($cekpegawai)->result();
 		$nama = $rpeg[0]->na_peg;
 		$nm_unit = $rpeg[0]->nm_unit;
@@ -119,7 +122,8 @@ class Finger extends CI_Controller {
 		$id_finger = $rpeg[0]->id_finger;
 		$no_peg_lm = $rpeg[0]->no_peg_lm;
 		$kd_kantor_in = "";
-		
+		$ket_bagian = $rpeg[0]->ket_bagian;
+
         echo "
 			<table id='table_finger' class='table mb-0 table-striped table-bordered' width='100%'>
 			<tr>
@@ -131,8 +135,13 @@ class Finger extends CI_Controller {
 			<tr class='info'>
 				<th style='background-color:#0C519D'><font color=white>Tanggal</font></th>
 				<th style='background-color:#0C519D'><font color=white>Hari</font></th>
-				<th style='background-color:#0C519D'><font color=white>Checkin</font></th>
-				<th style='background-color:#0C519D'><font color=white>Checkout</font></th>
+				<th style='background-color:#0C519D'><font color=white>Checkin</font></th>";
+
+			if($ket_bagian == "f"){
+				echo "<th style='background-color:#0C519D'><font color=white>Middle</font></th>";
+			}
+
+		echo "<th style='background-color:#0C519D'><font color=white>Checkout</font></th>
 				<th style='background-color:#0C519D'><font color=white>Terlambat</font></th>
 				<th style='background-color:#0C519D'><font color=white>Keterangan</font></th>
 			</tr>
@@ -195,6 +204,7 @@ class Finger extends CI_Controller {
 						$keteranganLibur = $dlibur[0]->keterangan;
 						
 						$chekcin = "";
+						$midday = "";
 						$chekcout = "";
 						$terlambat = "";
 						$libur = "1";
@@ -207,12 +217,14 @@ class Finger extends CI_Controller {
 							$keteranganLibur = "TUKAR HARI LIBUR ".$dlibur[0]->tgl_libur;
 
 							$chekcin = "";
+							$midday = "";
 							$chekcout = "";
 							$terlambat = "";
 							$libur = "2";
 						}
 						else{
 							$chekcin = "";
+							$midday = "";
 							$chekcout = "";
 							$terlambat = "";
 							$libur = "0";
@@ -286,6 +298,7 @@ class Finger extends CI_Controller {
 					if($rdata == 0){ // --- jika tdk ada hari libur ---
 						$dt = $this->db_hrdonline->query($cekfinger)->result();
 						$chekcin = $dt[0]->masuk;
+						$midday = $dt[0]->midday;
 						$chekcout = $dt[0]->keluar;
 						$terlambat = $dt[0]->terlambat;
 						$kd_kantor_in = $dt[0]->kd_kantor_in;
@@ -300,6 +313,7 @@ class Finger extends CI_Controller {
 						if($rdata != 0){
 							$dt = $this->db_hrdonline->query($cekfinger)->result();
 							$chekcin = $dt[0]->masuk;
+							$midday = $dt[0]->midday;
 							$chekcout = $dt[0]->keluar;
 							$terlambat = $dt[0]->terlambat;
 							$kd_kantor_in = $dt[0]->kd_kantor_in;
@@ -311,6 +325,7 @@ class Finger extends CI_Controller {
 						else{
 							$dt = $this->db_hrdonline->query($cekfinger)->result();
 							$chekcin = $dt[0]->masuk;
+							$midday = $dt[0]->midday;
 							$chekcout = $dt[0]->keluar;
 							$terlambat = '';
 							$kd_kantor_in = $dt[0]->kd_kantor_in;
@@ -467,8 +482,13 @@ class Finger extends CI_Controller {
 			<tr>
 				<td align='center'>".$tanggal."</td>
 				<td align='center'>".$daftar_hari[$namahari]."</td>
-				<td>".$chekcin."</td>
-				<td>".$chekcout."</td>
+				<td>".$chekcin."</td>";
+
+			if($ket_bagian == "f"){
+				echo "<td>".$midday."</td>";
+			}
+			
+			echo "<td>".$chekcout."</td>
 				<td>".$terlambat."</td>
 				<td>".$keterangan." $izinPeg</td>
 			</tr>";
