@@ -123,6 +123,7 @@ class Finger extends CI_Controller {
 		$no_peg_lm = $rpeg[0]->no_peg_lm;
 		$kd_kantor_in = "";
 		$ket_bagian = $rpeg[0]->ket_bagian;
+		
 
         echo "
 			<table id='table_finger' class='table mb-0 table-striped table-bordered' width='100%'>
@@ -207,6 +208,7 @@ class Finger extends CI_Controller {
 						$midday = "";
 						$chekcout = "";
 						$terlambat = "";
+						$flag_wfh = "";
 						$libur = "1";
 					}
 					else{
@@ -221,6 +223,7 @@ class Finger extends CI_Controller {
 							$chekcout = "";
 							$terlambat = "";
 							$libur = "2";
+							$flag_wfh = "";
 						}
 						else{
 							$chekcin = "";
@@ -228,6 +231,7 @@ class Finger extends CI_Controller {
 							$chekcout = "";
 							$terlambat = "";
 							$libur = "0";
+							$flag_wfh = "";
 						}
 						
 					}
@@ -305,6 +309,7 @@ class Finger extends CI_Controller {
 
 						$lat_lon_in = $dt[0]->lat_lon_in;
 						$lat_lon_out = $dt[0]->lat_lon_out;
+						$flag_wfh = $dt[0]->flag_wfh;
 						$lembur = 0;
 					}
 					else{ // --- jika hari libur nasional ---
@@ -317,6 +322,7 @@ class Finger extends CI_Controller {
 							$chekcout = $dt[0]->keluar;
 							$terlambat = $dt[0]->terlambat;
 							$kd_kantor_in = $dt[0]->kd_kantor_in;
+							$flag_wfh = $dt[0]->flag_wfh;
 
 							$lat_lon_in = $dt[0]->lat_lon_in;
 							$lat_lon_out = $dt[0]->lat_lon_out;
@@ -329,6 +335,7 @@ class Finger extends CI_Controller {
 							$chekcout = $dt[0]->keluar;
 							$terlambat = '';
 							$kd_kantor_in = $dt[0]->kd_kantor_in;
+							$flag_wfh = $dt[0]->flag_wfh;
 
 							$lat_lon_in = $dt[0]->lat_lon_in;
 							$lat_lon_out = $dt[0]->lat_lon_out;
@@ -478,6 +485,16 @@ class Finger extends CI_Controller {
 				$izinPeg = " [ " . $nmIzin . " ]";
 			}
 
+			if($flag_wfh == ""){
+				$ketwfh = "";
+			}
+			else if($flag_wfh == "1"){
+				$ketwfh = "<span class='m-1 badge rounded-pill bg-warning'>WFH</span>";
+			}
+			else{
+				$ketwfh = "<span class='m-1 badge rounded-pill bg-primary'>WFO</span>";
+			}
+
 			echo "
 			<tr>
 				<td align='center'>".$tanggal."</td>
@@ -490,7 +507,7 @@ class Finger extends CI_Controller {
 			
 			echo "<td>".$chekcout."</td>
 				<td>".$terlambat."</td>
-				<td>".$keterangan." $izinPeg</td>
+				<td>".$keterangan." $izinPeg $ketwfh</td>
 			</tr>";
 		}
 		

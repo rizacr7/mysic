@@ -81,6 +81,7 @@ class Absen extends CI_Controller {
 		$proyekcurah = 0;
 		$cekjarak = 1;
 		$device = "HP";
+		$wfh = 0;
 
 		$tgl_now = date('Y-m-d');
 		$checkin = date('H:i:s');
@@ -166,11 +167,13 @@ class Absen extends CI_Controller {
 		// }
 		if(date("N") == 5 && $flagwfo == 0){
 			$cekjarak = 0;
+			$wfh = 1;
 		}
 
 		//---khusus manager kadiv dan curah ----
 		if($kd_jab < 30 || $kd_jab == 102 || $proyekcurah == "1"){
 			$cekjarak = 0;
+			
 		}
 
 		if ($meters > $radius && $cekjarak == 1) {
@@ -210,7 +213,7 @@ class Absen extends CI_Controller {
 					exit;
 				}
 				else{
-					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."'";
+					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',masuk='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."',flag_wfh='$wfh'";
 					$this->db_hrdonline->query($insert);
 
 					echo json_encode([
@@ -260,7 +263,7 @@ class Absen extends CI_Controller {
 					}
 					else{
 						// --- insert t_finger_mobile ---
-						$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',shift_time_in='$jam_masuk',shift_time_out='$jam_pulang',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."'";
+						$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',shift_time_in='$jam_masuk',shift_time_out='$jam_pulang',masuk='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."',flag_wfh='$wfh'";
 						$this->db_hrdonline->query($insert);
 
 						echo json_encode([
@@ -320,6 +323,7 @@ class Absen extends CI_Controller {
 		$proyekcurah = 0;
 		$cekjarak = 1;
 		$device = "HP";
+		$wfh = 1;
 
 		$tgl_now = date('Y-m-d');
 		$checkin = date('H:i:s');
@@ -439,7 +443,7 @@ class Absen extends CI_Controller {
 					exit;
 				}
 				else{
-					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',midday='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."'";
+					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',midday='$checkin',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."',flag_wfh='$wfh'";
 					$this->db_hrdonline->query($insert);
 
 					echo json_encode([
@@ -489,7 +493,7 @@ class Absen extends CI_Controller {
 					}
 					else{
 						
-						$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',shift_time_in='$jam_masuk',shift_time_out='$jam_pulang',midday='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."'";
+						$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',shift_time_in='$jam_masuk',shift_time_out='$jam_pulang',midday='$checkin',terlambat='$terlambat',kode='$kode',ip_address_in='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_in='$lat_lon_in',kd_kantor_in='$kd_kantor',device_id='".$device_id."',fingerjs='$fingerprint',flag_mobile=1,device='".$device."',flag_wfh='$wfh'";
 						$this->db_hrdonline->query($insert);
 						
 						echo json_encode([
@@ -558,6 +562,7 @@ class Absen extends CI_Controller {
 		$lat_lon_out = $latitude.",".$longitude;
 		$cekjarak = 1;
 		$proyekcurah=0;
+		$wfh = 0;
 
 		$ipaddress = '-';
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])){
@@ -650,6 +655,7 @@ class Absen extends CI_Controller {
 		//---khusus fungsional hari jumat ----
 		if(date("N") == 5 && $flagwfo == 0){
 			$cekjarak = 0;
+			$wfh = 1;
 		}
 		//---khusus manager kadiv dan curah ----
 		if($kd_jab < 30 || $kd_jab == 102 || $proyekcurah == "1"){
@@ -697,8 +703,7 @@ class Absen extends CI_Controller {
 				}
 				else{
 					// --- insert t_finger_mobile ---
-					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',keluar='$checkout',kode='$kode',ip_address_out='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_out='$lat_lon_out',kd_kantor_out='$kd_kantor',device_id_out='".$device_id."',
-					fingerjs_out='$fingerprint'";
+					$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',keluar='$checkout',kode='$kode',ip_address_out='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_out='$lat_lon_out',kd_kantor_out='$kd_kantor',device_id_out='".$device_id."',fingerjs_out='$fingerprint',flag_wfh='$wfh'";
 					$this->db_hrdonline->query($insert);
 				}
 
@@ -758,8 +763,9 @@ class Absen extends CI_Controller {
 					}
 					else{
 						$insert = "insert into db_hrd.t_finger_mobile set no_peg = '$username',tanggal='$tgl_now',shift_time_in='$jam_masuk',shift_time_out='$jam_pulang',keluar='$checkout',kode='$kode',ip_address_out='$ipaddress',latitude='$latitude',longitude='$longitude',lat_lon_out='$lat_lon_out',kd_kantor_out='$kd_kantor',plg_cepat='$pulangcepat',lembur='$lembur',device_id_out='".$device_id."',
-						fingerjs_out='$fingerprint'";
+						fingerjs_out='$fingerprint',flag_wfh='$wfh'";
 						$this->db_hrdonline->query($insert);
+						
 							echo json_encode([
 							'status' => 'success',
 							'message' => 'Checkout Berhasil!'
