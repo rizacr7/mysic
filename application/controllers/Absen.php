@@ -646,6 +646,8 @@ class Absen extends CI_Controller {
 		// 		$cekjarak = 0;
 		// 	}
 		// }
+		
+		//---khusus fungsional hari jumat ----
 		if(date("N") == 5 && $flagwfo == 0){
 			$cekjarak = 0;
 		}

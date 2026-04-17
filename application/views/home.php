@@ -156,6 +156,7 @@
           //       $cekjarak = 0;
           //     }
           // }
+          
           if(date("N") == 5 && $flagwfo == 0){
             $cekjarak = 0;
           }
