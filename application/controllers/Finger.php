@@ -123,7 +123,7 @@ class Finger extends CI_Controller {
 		$no_peg_lm = $rpeg[0]->no_peg_lm;
 		$kd_kantor_in = "";
 		$ket_bagian = $rpeg[0]->ket_bagian;
-		
+		$flag_wfh = "";
 
         echo "
 			<table id='table_finger' class='table mb-0 table-striped table-bordered' width='100%'>
