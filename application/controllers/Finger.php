@@ -124,6 +124,7 @@ class Finger extends CI_Controller {
 		$kd_kantor_in = "";
 		$ket_bagian = $rpeg[0]->ket_bagian;
 		$flag_wfh = "";
+		$midday = "";
 
         echo "
 			<table id='table_finger' class='table mb-0 table-striped table-bordered' width='100%'>
