@@ -491,7 +491,21 @@ class Sdm extends CI_Controller {
 			$paramkb['tanggal'] = $tanggal;
 			$DataResult=$this->sdm_model->get_bukti($paramkb);
 
-			$insert = "insert into t_sppd set tanggal = '$tanggal',bukti='$DataResult',no_peg='$no_peg',unit='$kd_unit',tk_jabatan='$kd_jab',tujuan='$tujuan',dalam_rangka='$keterangan',beban='$beban',unit_asli = '$kd_unit',keperluan='$keperluan',kendaraan='$kendaraan',tgl_awal='$tgl_awal',tgl_akhir='$tgl_akhir',jns_sppd='$keperluan',khusus='0',user_id='$username',akomodasi='$akomodasi'";
+			//---cek kode jobgrade ---
+			$queryPegawai = "SELECT kd_jobgrade FROM mas_peg WHERE no_peg = '$no_peg'";
+			$val = $this->db->query($queryPegawai)->result();
+			$kd_jobgrade = $val[0]->kd_jobgrade;
+
+			if($kd_jobgrade == "" && $kd_unit == "90A0"){
+				//---pengurus--
+				$kd_jobgrade = 0;
+			}
+			else if($kd_jobgrade == "" && $kd_unit != "90A0"){
+				//---staff---
+				$kd_jobgrade = 5;
+			}
+
+			$insert = "insert into t_sppd set tanggal = '$tanggal',bukti='$DataResult',no_peg='$no_peg',unit='$kd_unit',tk_jabatan='$kd_jab',tujuan='$tujuan',dalam_rangka='$keterangan',beban='$beban',unit_asli = '$kd_unit',keperluan='$keperluan',kendaraan='$kendaraan',tgl_awal='$tgl_awal',tgl_akhir='$tgl_akhir',jns_sppd='$keperluan',khusus='0',user_id='$username',akomodasi='$akomodasi',kd_jobgrade='$kd_jobgrade'";
 			
 			$this->db->query($insert);
 			
@@ -547,10 +561,20 @@ class Sdm extends CI_Controller {
 		$kas_keluar = $_POST['kas_keluar'];
 		$taksi = 0;
 
-		$qsppd = "SELECT AKOMODASI,KENDARAAN FROM t_sppd WHERE bukti = '$bukti_sppd'";
+		$qsppd = "SELECT AKOMODASI,KENDARAAN,KD_JOBGRADE FROM t_sppd WHERE bukti = '$bukti_sppd'";
 		$query = $this->db->query($qsppd)->result();
 		$akomodasiSppd = $query[0]->AKOMODASI;
 		$kendaraanSppd = $query[0]->KENDARAAN;
+		$kd_jobgrade = $query[0]->KD_JOBGRADE;
+
+		if($kd_jobgrade == "" && $kd_unit == "90A0"){
+			//---khusus pengurus---
+			$kd_jobgrade = 0;
+		}
+		else if($kd_jobgrade == "" && $kd_unit != "90A0"){
+			//---khusus staf---
+			$kd_jobgrade = 5;
+		}
 
 		if($_POST['khusus'] == '1'){
 			$khusus = 1;
@@ -599,6 +623,7 @@ class Sdm extends CI_Controller {
 					$param['tgl_akhir'] = $tgl_akhir;
 					$param['khusus'] = $khusus;
 					$param['no_peg'] = $no_peg;
+					$param['kd_jobgrade'] = $kd_jobgrade;
 					$DataUangHarian=$this->sdm_model->get_uangharian($param);
 					
 					$strpulang = explode(":",$jam_pulang);
@@ -606,18 +631,20 @@ class Sdm extends CI_Controller {
 					$mntpulang = $strpulang[1];
 						
 					if((($jampulang == "24" || $jampulang == "00" || $jampulang == "0" || $jampulang == "01" || $jampulang == "1") && $mntpulang > 0) || $jam_pulang == "01:00"  || $jam_pulang == "1:00" || $jam_pulang == "1:0" || $jam_pulang == "02:00"  || $jam_pulang == "2:00" || $jam_pulang == "2:0"){
-						$persen_inap = 25;
+						// $persen_inap = 25;
+						$persen_inap = 100;
 					}
 					else if((($jampulang == "02" || $jampulang == "03" || $jampulang == "3") && $mntpulang > 0) || $jam_pulang == "03:00"  || $jam_pulang == "3:00" || $jam_pulang == "3:0" || $jam_pulang == "04:00"  || $jam_pulang == "4:00" || $jam_pulang == "4:0"){
-						$persen_inap = 50;
+						// $persen_inap = 50;
+						$persen_inap = 100;
 					}
 					else if(($jampulang == "04" && $mntpulang > 0) || $jam_pulang == "05:00"  || $jam_pulang == "5:00" || $jam_pulang == "5:0"){
-						$persen_inap = 75;
+						// $persen_inap = 75;
+						$persen_inap = 100;
 					}
 					else {
 						$persen_inap = 100;
 					}
-
 					// --- hitung uang inap ---
 					if($akomodasi <> "hotel"){
 						$param = array();
@@ -625,6 +652,7 @@ class Sdm extends CI_Controller {
 						$param['tgl_akhir'] = $tgl_akhir;
 						$param['no_peg'] = $no_peg;
 						$param['jam_pulang'] = $jam_pulang;
+						$param['kd_jobgrade'] = $kd_jobgrade;
 						$DataUangInap=$this->sdm_model->get_uanginap($param);
 						
 						$lamainap = (((abs(strtotime ($tgl_awal) - strtotime ($tgl_akhir)))/(60*60*24)));
@@ -644,6 +672,7 @@ class Sdm extends CI_Controller {
 						$param['no_peg'] = $no_peg;
 						$param['jam_pulang'] = $jam_pulang;
 						$param['lamainaphotel'] = $lamainaphotel;
+						$param['kd_jobgrade'] = $kd_jobgrade;
 						$DataUangInap=$this->sdm_model->get_uanginap_hotel($param);
 					}
 					
@@ -670,6 +699,7 @@ class Sdm extends CI_Controller {
 				$param['tgl_akhir'] = $tgl_akhir;
 				$param['khusus'] = $khusus;
 				$param['no_peg'] = $no_peg;
+				$param['kd_jobgrade'] = $kd_jobgrade;
 				$DataUangHarian=$this->sdm_model->get_uangharian($param);
 				
 				$strpulang = explode(":",$jam_pulang);
@@ -677,13 +707,16 @@ class Sdm extends CI_Controller {
 				$mntpulang = $strpulang[1];
 
 				if((($jampulang == "24" || $jampulang == "00" || $jampulang == "0" || $jampulang == "01" || $jampulang == "1") && $mntpulang > 0) || $jam_pulang == "01:00"  || $jam_pulang == "1:00" || $jam_pulang == "1:0" || $jam_pulang == "02:00"  || $jam_pulang == "2:00" || $jam_pulang == "2:0"){
-					$persen_inap = 25;
+					// $persen_inap = 25;
+					$persen_inap = 100;
 				}
 				else if((($jampulang == "02" || $jampulang == "03" || $jampulang == "3") && $mntpulang > 0) || $jam_pulang == "03:00"  || $jam_pulang == "3:00" || $jam_pulang == "3:0" || $jam_pulang == "04:00"  || $jam_pulang == "4:00" || $jam_pulang == "4:0"){
-					$persen_inap = 50;
+					// $persen_inap = 50;
+					$persen_inap = 100;
 				}
 				else if(($jampulang == "04" && $mntpulang > 0) || $jam_pulang == "05:00"  || $jam_pulang == "5:00" || $jam_pulang == "5:0"){
-					$persen_inap = 75;
+					// $persen_inap = 75;
+					$persen_inap = 100;
 				}
 				else {
 					$persen_inap = 100;
@@ -695,6 +728,7 @@ class Sdm extends CI_Controller {
 					$param['tgl_akhir'] = $tgl_akhir;
 					$param['no_peg'] = $no_peg;
 					$param['jam_pulang'] = $jam_pulang;
+					$param['kd_jobgrade'] = $kd_jobgrade;
 					$DataUangInap=$this->sdm_model->get_uanginap($param);
 					
 					$lamainap = (((abs(strtotime ($tgl_awal) - strtotime ($tgl_akhir)))/(60*60*24)));
@@ -713,6 +747,7 @@ class Sdm extends CI_Controller {
 					$param['no_peg'] = $no_peg;
 					$param['jam_pulang'] = $jam_pulang;
 					$param['lamainaphotel'] = $lamainaphotel;
+					$param['kd_jobgrade'] = $kd_jobgrade;
 					$DataUangInap=$this->sdm_model->get_uanginap_hotel($param);
 				}
 				

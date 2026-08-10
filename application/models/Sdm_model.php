@@ -433,23 +433,35 @@ class Sdm_model extends CI_Model{
 		$tgl_akhir = $data['tgl_akhir'];
 		$khusus = $data['khusus'];
 		$no_peg = $data['no_peg'];
+		$kd_jobgrade = $data['kd_jobgrade'];
+		$kdeselon = substr($kd_jobgrade,0,1);
 		
-		$cektarif = "SELECT a.kd_jab,b.* FROM mas_peg a 
-		LEFT JOIN m_tarif_sppd b ON a.kd_jab = b.kd_jab
-		WHERE a.no_peg = '$no_peg'";
-		$rtarif = $this->db->query($cektarif)->result();
-		$uang_umum = $rtarif[0]->uang_umum;
-		$uang_khusus = $rtarif[0]->uang_khusus;
-		$kd_jab = $rtarif[0]->kd_jab;
+		if($kd_jobgrade != ""){
+			//--tarif baru--
+			$cektarif = "SELECT * FROM m_tarif_sppd_eselon WHERE kd_eselon = '".$kdeselon."'";
+			$val = $this->db->query($cektarif)->result();
+			$uang_umum = $val[0]->uang_umum;
+			$uang_khusus = $val[0]->uang_khusus;
+		}
+		else{
+			$cektarif = "SELECT a.kd_jab,b.* FROM mas_peg a 
+			LEFT JOIN m_tarif_sppd b ON a.kd_jab = b.kd_jab
+			WHERE a.no_peg = '$no_peg'";
+			$rtarif = $this->db->query($cektarif)->result();
+			$uang_khusus = $rtarif[0]->uang_khusus;
+			$uang_umum = $rtarif[0]->uang_umum;
+		}
+
+		// $cektarif = "SELECT a.kd_jab,b.* FROM mas_peg a 
+		// LEFT JOIN m_tarif_sppd b ON a.kd_jab = b.kd_jab
+		// WHERE a.no_peg = '$no_peg'";
+		// $rtarif = $this->db->query($cektarif)->result();
+		// $uang_umum = $rtarif[0]->uang_umum;
+		// $uang_khusus = $rtarif[0]->uang_khusus;
+		// $kd_jab = $rtarif[0]->kd_jab;
 		
 		if($tgl_awal == $tgl_akhir){
-			if($kd_jab == '01' || $kd_jab == '02' || $kd_jab == '03' || $kd_jab == '04'){
-				$lama = 1;
-			}
-			else{
-				$lama = 1;
-			}
-			
+			$lama = 1;
 		}
 		else{
 			$lama = (((abs(strtotime ($tgl_awal) - strtotime ($tgl_akhir)))/(60*60*24))) + 1;
@@ -469,25 +481,44 @@ class Sdm_model extends CI_Model{
 		$tgl_akhir = $data['tgl_akhir'];
 		$no_peg = $data['no_peg'];
 		$jam_pulang = $data['jam_pulang'];
+		$kd_jobgrade = $data['kd_jobgrade'];
+		$kdeselon = substr($kd_jobgrade,0,1);
+
+		if($kd_jobgrade != ""){
+			//--tarif baru--
+			$cektarif = "SELECT * FROM m_tarif_sppd_eselon WHERE kd_eselon = '".$kdeselon."'";
+			$val = $this->db->query($cektarif)->result();
+			$uang_penginapan = $val[0]->uang_penginapan;
+		}
+		else{
+			$cektarif = "SELECT a.kd_jab,b.* FROM mas_peg a 
+			LEFT JOIN m_tarif_sppd b ON a.kd_jab = b.kd_jab
+			WHERE a.no_peg = '$no_peg'";
+			$rtarif = $this->db->query($cektarif)->result();
+			$uang_penginapan = $rtarif[0]->uang_penginapan;
+		}
 		
-		$cektarif = "SELECT a.kd_jab,b.* FROM mas_peg a 
-		LEFT JOIN m_tarif_sppd b ON a.kd_jab = b.kd_jab
-		WHERE a.no_peg = '$no_peg'";
-		$rtarif = $this->db->query($cektarif)->result();
-		$uang_penginapan = $rtarif[0]->uang_penginapan;
+		// $cektarif = "SELECT a.kd_jab,b.* FROM mas_peg a 
+		// LEFT JOIN m_tarif_sppd b ON a.kd_jab = b.kd_jab
+		// WHERE a.no_peg = '$no_peg'";
+		// $rtarif = $this->db->query($cektarif)->result();
+		// $uang_penginapan = $rtarif[0]->uang_penginapan;
 		
 		$strpulang = explode(":",$jam_pulang);
 		$jampulang = $strpulang[0];
 		$mntpulang = $strpulang[1];
 			
 		if((($jampulang == "24" || $jampulang == "00" || $jampulang == "0" || $jampulang == "01" || $jampulang == "1") && $mntpulang > 0) || $jam_pulang == "01:00"  || $jam_pulang == "1:00" || $jam_pulang == "1:0" || $jam_pulang == "02:00"  || $jam_pulang == "2:00" || $jam_pulang == "2:0"){
-			$persen = 25;
+			// $persen = 25;
+			$persen = 100;
 		}
 		else if((($jampulang == "02" || $jampulang == "03" || $jampulang == "3") && $mntpulang > 0) || $jam_pulang == "03:00"  || $jam_pulang == "3:00" || $jam_pulang == "3:0" || $jam_pulang == "04:00"  || $jam_pulang == "4:00" || $jam_pulang == "4:0"){
-			$persen = 50;
+			// $persen = 50;
+			$persen = 100;
 		}
 		else if(($jampulang == "04" && $mntpulang > 0) || $jam_pulang == "05:00"  || $jam_pulang == "5:00" || $jam_pulang == "5:0"){
-			$persen = 75;
+			// $persen = 75;
+			$persen = 100;
 		}
 		else{
 			$persen = 100;
@@ -538,25 +569,44 @@ class Sdm_model extends CI_Model{
 		$lamainaphotel = $data['lamainaphotel'];
 		$no_peg = $data['no_peg'];
 		$jam_pulang = $data['jam_pulang'];
-		
-		$cektarif = "SELECT a.kd_jab,b.* FROM mas_peg a 
-		LEFT JOIN m_tarif_sppd b ON a.kd_jab = b.kd_jab
-		WHERE a.no_peg = '$no_peg'";
-		$rtarif = $this->db->query($cektarif)->result();
-		$uang_penginapan = $rtarif[0]->uang_penginapan;
+		$kd_jobgrade = $data['kd_jobgrade'];
+		$kdeselon = substr($kd_jobgrade,0,1);
+
+		if($kd_job != ""){
+			//--tarif baru--
+			$cektarif = "SELECT * FROM m_tarif_sppd_eselon WHERE kd_eselon = '".$kdeselon."'";
+			$val = $this->db->query($cektarif)->result();
+			$uang_penginapan = $val[0]->uang_penginapan;
+		}
+		else{
+			$cektarif = "SELECT a.kd_jab,b.* FROM mas_peg a 
+			LEFT JOIN m_tarif_sppd b ON a.kd_jab = b.kd_jab
+			WHERE a.no_peg = '$no_peg'";
+			$rtarif = $this->db->query($cektarif)->result();
+			$uang_penginapan = $rtarif[0]->uang_penginapan;
+		}
+
+		// $cektarif = "SELECT a.kd_jab,b.* FROM mas_peg a 
+		// LEFT JOIN m_tarif_sppd b ON a.kd_jab = b.kd_jab
+		// WHERE a.no_peg = '$no_peg'";
+		// $rtarif = $this->db->query($cektarif)->result();
+		// $uang_penginapan = $rtarif[0]->uang_penginapan;
 		
 		$strpulang = explode(":",$jam_pulang);
 		$jampulang = $strpulang[0];
 		$mntpulang = $strpulang[1];
 			
 		if((($jampulang == "24" || $jampulang == "00" || $jampulang == "0" || $jampulang == "01" || $jampulang == "1") && $mntpulang > 0) || $jam_pulang == "01:00"  || $jam_pulang == "1:00" || $jam_pulang == "1:0" || $jam_pulang == "02:00"  || $jam_pulang == "2:00" || $jam_pulang == "2:0"){
-			$persen = 25;
+			// $persen = 25;
+			$persen = 100;
 		}
 		else if((($jampulang == "02" || $jampulang == "03" || $jampulang == "3") && $mntpulang > 0) || $jam_pulang == "03:00"  || $jam_pulang == "3:00" || $jam_pulang == "3:0" || $jam_pulang == "04:00"  || $jam_pulang == "4:00" || $jam_pulang == "4:0"){
-			$persen = 50;
+			// $persen = 50;
+			$persen = 100;
 		}
 		else if(($jampulang == "04" && $mntpulang > 0) || $jam_pulang == "05:00"  || $jam_pulang == "5:00" || $jam_pulang == "5:0"){
-			$persen = 75;
+			// $persen = 75;
+			$persen = 100;
 		}
 		else{
 			$persen = 100;
