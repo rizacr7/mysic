@@ -18,7 +18,7 @@ class M_login extends CI_Model{
 		// left join m_jabatan d on a.kd_jab = d.kd_jab
 		// left join m_jobdesc e on a.kd_job = e.kd_job
 		// where a.no_peg = '".$no_peg."'";
-
+		
 		$query = "select a.*,b.kd_bagian,b.nm_unit,c.nm_statpeg,d.nm_jab,b.kd_akun_unit,IF(f.`nm_so` IS NULL,e.nm_job,f.`nm_job`) AS nm_job,FLOOR(DATEDIFF(CURDATE(), a.tgl_lahir) / 365) AS umur,f.`nm_job` AS nm_so,g.`personal`,h.`kd_eselon` from mas_peg a 
 		left join m_unit b on a.kd_unit = b.kd_unit  
 		left join m_statuspegawai c on a.status_peg = c.kd_statpeg
