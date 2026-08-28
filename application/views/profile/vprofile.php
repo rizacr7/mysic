@@ -32,8 +32,8 @@
                 <div class="team-info">
                   <h6 class="mb-1 fz-14"><?php echo $Datapeg[0]->na_peg?></h6>
                   <h7 class="mb-1 fz-14"><?php echo $Datapeg[0]->no_peg?></h7>
-                  <p class="mb-0 fz-12"><?php echo $Datapeg[0]->nm_jab?></p>
-                  <p class="mb-0 fz-12"><?php echo $Datapeg[0]->kd_golongan?></p>
+                  <p class="mb-0 fz-12"><?php echo $Datapeg[0]->nm_job?></p>
+                  <p class="mb-0 fz-12"><?php echo $Datapeg[0]->personal?> <?php echo $Datapeg[0]->kd_eselon?></p>
                 </div>
               </div>
               <!-- Contact Info-->
