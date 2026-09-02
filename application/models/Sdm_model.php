@@ -852,7 +852,7 @@ class Sdm_model extends CI_Model{
            
         }
 
-		$query = "SELECT a.*,b.na_peg,c.nm_job,d.nm_jab FROM db_hrd.t_pengajuan_mutasi a 
+		$query = "SELECT a.*,b.na_peg,c.nm_job,d.nm_jab,i.`nm_job` AS jobgrade_awal FROM db_hrd.t_pengajuan_mutasi a 
         LEFT JOIN db_hrd.mas_peg b ON a.`no_peg` = b.`no_peg` 
         LEFT join db_hrd.m_jobdesc c on a.kd_job = c.kd_job
         LEFT join db_hrd.m_jabatan d on a.kd_jab = d.kd_jab
@@ -860,6 +860,7 @@ class Sdm_model extends CI_Model{
         LEFT join db_hrd.m_bagian f on e.kd_bagian = f.kd_bagian
         LEFT JOIN db_hrd.m_unit g ON a.`kd_unit_tujuan` =  g.`kd_unit`
         LEFT JOIN db_hrd.m_bagian h ON g.kd_bagian = h.kd_bagian
+		LEFT JOIN db_hrd.`m_so` i ON a.`kd_jobgrade` = i.`kd_job`
         WHERE a.is_del = 0 ".$whereapp." ORDER BY a.tgl_pengajuan DESC;";
 		// echo $query;
 		$result = $this->db_hrdonline->query($query)->result_array();
